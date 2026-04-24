@@ -27,7 +27,7 @@ async def list_products():
 async def get_product_by_id_v0(id: int):
     """Lấy thông tin chi tiết của một sản phẩm theo ID.
 
-    Version v0 trả về dữ liệu mẫu mặc định (không truy vấn cơ sở dữ liệu).  
+    Version v0 trả về dữ liệu mẫu mặc định (không truy vấn cơ sở dữ liệu).
     Được sử dụng cho mục đích testing và demo ổn định.
 
     **Args:**
