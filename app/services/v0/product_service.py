@@ -58,6 +58,7 @@ class ProductServiceV0:
                 createdAtLocal="2026-03-01 17:00:00"
             ),
         ]
+    
     async def get_by_id(self, product_id: int) -> ProductResponse:
         return ProductResponse(
             _id=product_id,
