@@ -6,6 +6,7 @@ diseases = [
     Disease(id=3, name="Bệnh béo phì"),
 ]
 
+
 class DiseaseServiceV0:
 
     @staticmethod

@@ -14,9 +14,11 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
 @router.get("/")
 async def list_products():
     return await product_service_v0.get_all()
+
 
 @router.get(
     "/{id}",
