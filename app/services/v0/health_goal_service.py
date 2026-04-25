@@ -35,3 +35,4 @@ class HealthGoalServiceV0:
         global health_goals
         health_goals = [h for h in health_goals if h.id != health_goal_id]
         return {"message": "Health Goal deleted successfully"}
+    
