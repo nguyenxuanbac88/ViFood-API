@@ -80,6 +80,7 @@ def create_allergy(name: str):
     """
     return AllergyServiceV0.create_allergy(name)
 
+
 @router.put("/{id}")
 def update_allergy(id: int, name: str):
     """
@@ -107,6 +108,7 @@ def update_allergy(id: int, name: str):
             detail=f"Allergy with ID {id} not found"
         )
     return allergy
+
 
 @router.delete("/{id}")
 def delete_allergy(id: int):
