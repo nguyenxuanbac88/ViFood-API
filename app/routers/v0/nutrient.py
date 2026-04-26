@@ -71,7 +71,7 @@ def get_nutrient_by_id(id: int):
 
 
 @router.post("/")
-def create_nutrient(name: str, description: str | None = None, image: str | None = None, 
+def create_nutrient(name: str, description: str | None = None, image: str | None = None,
                     effects: list[HealthEffect] | None = None, found_in: list[FoodCategory] | None = None):
     """
     Tạo mới một chất dinh dưỡng.
@@ -99,7 +99,7 @@ def create_nutrient(name: str, description: str | None = None, image: str | None
 
 
 @router.put("/{id}")
-def update_nutrient(id: int, name: str, description: str | None = None, image: str | None = None, 
+def update_nutrient(id: int, name: str, description: str | None = None, image: str | None = None,
                     effects: list[HealthEffect] | None = None, found_in: list[FoodCategory] | None = None):
     """
     Cập nhật thông tin một chất dinh dưỡng.
