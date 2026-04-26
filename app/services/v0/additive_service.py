@@ -58,10 +58,10 @@ class AdditiveServiceV0:
         return next((a for a in additives if a.id == additive_id), None)
     
     @staticmethod
-    def create_additive(name: str, description: str | None = None, code: str | None = None, image: str | None = None, 
+    def create_additive(name: str, description: str | None = None, code: str | None = None, image: str | None = None,
                         effects: list[HealthEffect] | None = None, found_in: list[FoodCategory] | None = None):
         new_id = max(a.id for a in additives) + 1 if additives else 1
-        new_additive = Additive(id=new_id, name=name, code=code, description=description, image=image, 
+        new_additive = Additive(id=new_id, name=name, code=code, description=description, image=image,
                                 effects=effects or [], found_in=found_in or [])
         additives.append(new_additive)
         return new_additive
