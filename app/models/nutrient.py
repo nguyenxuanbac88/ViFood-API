@@ -11,5 +11,5 @@ class Nutrient(BaseModel):
     name: str
     description: Optional[str] = None
     image: Optional[str] = None
-    effects: List[HealthEffect] = []
-    found_in: List[FoodCategory] = []
+    effects: list[HealthEffect] = []
+    found_in: list[FoodCategory] = []
