@@ -3,25 +3,31 @@ from app.models.user_profile import UserProfile
 from app.models.health_goal import HealthGoal
 from app.models.disease import Disease
 from app.models.allergy import Allergy
-from app.models.user import User
 
 from app.services.v0.health_goal_service import HealthGoalServiceV0
 from app.services.v0.disease_service import DiseaseServiceV0
 from app.services.v0.allergy_service import AllergyServiceV0
 
 user_profile = [
-        UserProfile(
+    UserProfile(
         profile_id=1,
         userId=1,
         firstName="Thành",
         lastName="Lâm",
         avatar="https://example.com/avatar.jpg",
-        health_goals=[HealthGoal(id=1, name="Giảm cân")],
-        diseases=[Disease(id=1, name="Tiểu đường")],
-        allergies=[Allergy(id=1, name="Gluten")],
-        family_members=[]
-    )
+        health_goals=[
+            HealthGoal(id=1, name="Giảm cân"),
+        ],
+        diseases=[
+            Disease(id=1, name="Tiểu đường"),
+        ],
+        allergies=[
+            Allergy(id=1, name="Gluten"),
+        ],
+        family_members=[],
+    ),
 ]
+
 
 class UserProfileServiceV0:
     @staticmethod
@@ -39,7 +45,7 @@ class UserProfileServiceV0:
             raise ValueError("HealthGoal not found")
 
         if any(g.id == health_goal_id for g in profile.health_goals):
-            return profile 
+            return profile
 
         profile.health_goals.append(goal)
 
@@ -70,7 +76,7 @@ class UserProfileServiceV0:
             raise ValueError("Disease not found")
 
         if any(d.id == disease_id for d in profile.diseases):
-            return profile 
+            return profile
 
         profile.diseases.append(disease)
 

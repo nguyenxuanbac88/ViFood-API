@@ -89,7 +89,7 @@ async def delete_disease_from_user_profile(profile_id: int, disease_id: int):
     "/",
     summary="Tạo hồ sơ người dùng với đầy đủ thông tin",
 )
-async def create_user_profile(        
+async def create_user_profile(
         profile_id: int,
         first_name: str,
         last_name: str,
@@ -97,8 +97,7 @@ async def create_user_profile(
         health_goal_ids: list[int],
         disease_ids: list[int],
         allergy_ids: list[int],
-        parent_profile_id: int | None = None
-    ):
+        parent_profile_id: int | None = None):
     """Tạo hồ sơ người dùng với full thông tin"""
     try:
         new_profile = UserProfileServiceV0.create_user_profile(
