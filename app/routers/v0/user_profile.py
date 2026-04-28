@@ -84,6 +84,7 @@ async def delete_disease_from_user_profile(profile_id: int, disease_id: int):
             detail=str(e)
         )
         
+<<<<<<< HEAD
         
 @router.post(
     "/{profile_id}/allergies/{allergy_id}",
@@ -116,6 +117,8 @@ async def delete_allergy_from_user_profile(profile_id: int, allergy_id: int):
             detail=str(e)
         )
         
+=======
+>>>>>>> origin/develop
 
 @router.post(
     "/",

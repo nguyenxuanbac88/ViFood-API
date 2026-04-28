@@ -95,6 +95,7 @@ class UserProfileServiceV0:
         profile.diseases = [d for d in profile.diseases if d.id != disease_id]
 
         return profile
+<<<<<<< HEAD
     
     @staticmethod
     def add_allergy(profile_id: int, allergy_id: int) -> UserProfile:
@@ -126,6 +127,8 @@ class UserProfileServiceV0:
         profile.allergies = [a for a in profile.allergies if a.id != allergy_id]
 
         return profile
+=======
+>>>>>>> origin/develop
 
     @staticmethod
     def create_user_profile(
