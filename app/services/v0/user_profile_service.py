@@ -161,7 +161,6 @@ class UserProfileServiceV0:
         if not first_name or not last_name:
             raise ValueError("Missing required fields")
 
-
         # 2. Tạo profile
         new_profile = UserProfile(
             profile_id=profile_id,
@@ -169,7 +168,7 @@ class UserProfileServiceV0:
             firstName=first_name,
             lastName=last_name,
             avatar=avatar,
-            health_goals= [],
+            health_goals=[],
             diseases=[],
             allergies=[],
             family_members=[]
@@ -204,4 +203,4 @@ class UserProfileServiceV0:
         if avatar is not None:
             profile.avatar = avatar
 
-        return profile  
+        return profile
