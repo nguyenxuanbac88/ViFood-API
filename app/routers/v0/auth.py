@@ -1,5 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
+from app.core.dependencies import get_current_user
 from app.schemas.auth import RegisterRequest
 from app.services.v0.auth_service import AuthServiceV0
 
@@ -34,28 +35,32 @@ def register(data: RegisterRequest):
         }
     }
     
-
-@router.get("/users")
-def get_all_users():
-    users = auth_service.get_all_users()
-
+    
+@router.post("/login")
+def login(email: str, password: str):
+    result = auth_service.login(
+        email=email,
+        password=password
+    )
     return {
-        "message": "Get all users success",
-        "data": users
+        "message": "Login success",
+        "data": result
     }
     
-
-@router.get("/users/{user_id}")
-def get_user_by_id(user_id: int):
-    user = auth_service.get_user_by_id(user_id)
-
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="User not found"
-        )
+    
+@router.post("/refresh")
+def refresh_access_token(refresh_token: str):
+    result = auth_service.refresh_access_token(refresh_token)
 
     return {
-        "message": "Get user by id success",
-        "data": user
-    }
+        "message": "Refresh access token success",
+        "data": result
+    } 
+    
+
+@router.get("/me")
+def get_me(
+    current_user = Depends(get_current_user)
+):
+
+    return current_user
