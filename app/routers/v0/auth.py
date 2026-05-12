@@ -55,12 +55,11 @@ def refresh_access_token(refresh_token: str):
     return {
         "message": "Refresh access token success",
         "data": result
-    } 
-    
+    }
+
 
 @router.get("/me")
 def get_me(
-    current_user = Depends(get_current_user)
+    current_user=Depends(get_current_user)
 ):
-
     return current_user

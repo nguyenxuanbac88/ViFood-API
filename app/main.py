@@ -175,6 +175,7 @@ async def database_test():
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
+
 # ==================== Startup/Shutdown Events ====================
 
 @app.on_event("startup")

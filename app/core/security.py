@@ -10,13 +10,16 @@ pwd_context = CryptContext(
     deprecated="auto"
 )
 
+
 # ==================== Hash Password ====================
 def hash_password(password: str) -> str:
     return pwd_context.hash(password.strip())
 
+
 # ==================== Verify Password ====================
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
+
 
 # ==================== Create Access Token ====================
 def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
@@ -29,6 +32,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
+
 # ==================== Create Refresh Token ====================
 def create_refresh_token(data: dict, expires_delta: timedelta = None) -> str:
     to_encode = data.copy()
@@ -40,9 +44,9 @@ def create_refresh_token(data: dict, expires_delta: timedelta = None) -> str:
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
+
 # ==================== Verify Token ====================
 def verify_token(token: str):
-
     try:
         payload = jwt.decode(
             token,

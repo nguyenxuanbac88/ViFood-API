@@ -13,13 +13,13 @@ class RegisterRequest(BaseModel):
         if self.password != self.confirm_password:
             raise ValueError("Passwords do not match")
         return self
-    
-    
+
+
 class LoginRequest(BaseModel):
     email: EmailStr
-    password: str 
-    
-    
+    password: str
+
+
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str

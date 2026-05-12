@@ -113,8 +113,7 @@ class UserProfileServiceV0:
         profile_id: int,
         health_goal_id: int
     ) -> UserProfile:
-
-        profile = UserProfileServiceV0.get_user_profile(profile_id)
+        UserProfileServiceV0.get_user_profile(profile_id)
 
         goal = HealthGoalServiceV0.get_health_goal_by_id(
             health_goal_id

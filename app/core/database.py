@@ -4,6 +4,7 @@ import os
 
 load_dotenv()
 
+
 class Neo4jConnection:
     def __init__(self):
 
@@ -21,5 +22,6 @@ class Neo4jConnection:
 
     def get_session(self):
         return self.driver.session()
+
 
 neo4j_db = Neo4jConnection()
