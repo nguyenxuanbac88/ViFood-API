@@ -76,7 +76,6 @@ class UserProfileServiceV0:
         if not last_name.strip():
             raise ValueError("Last name is required")
 
-        # tìm profile chính của user hiện tại
         parent_profile = profile_repo.get_user_profile_by_user_id(
             current_user_id
         )

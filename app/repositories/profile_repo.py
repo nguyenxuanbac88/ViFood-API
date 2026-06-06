@@ -55,6 +55,20 @@ class UserProfileRepository:
             ),
             None
         )
+        
+    def get_user_profile_by_user_id(
+        self,
+        user_id: int
+    ) -> UserProfile | None:
+
+        return next(
+            (
+                profile
+                for profile in fake_user_profiles_db
+                if profile.userId == user_id
+            ),
+            None
+        )
 
     def create_user_profile(
         self,
