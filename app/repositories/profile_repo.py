@@ -125,7 +125,6 @@ class UserProfileRepository:
         
         return parent.family_members if parent else []
 
-    
     def delete_family_member_profile(
         self,
         member_profile_id: int
