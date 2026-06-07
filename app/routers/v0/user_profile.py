@@ -188,22 +188,14 @@ async def delete_user_profile(
 ):
 
     try:
-<<<<<<< HEAD
         profile = UserProfileServiceV0.delete_user_profile(
-=======
-        UserProfileServiceV0.delete_user_profile(
->>>>>>> origin/develop
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id
         )
 
         return {
-<<<<<<< HEAD
             "message": "Delete user profile success",
             "data": profile
-=======
-            "message": "Delete user profile success"
->>>>>>> origin/develop
         }
 
     except PermissionError as e:
