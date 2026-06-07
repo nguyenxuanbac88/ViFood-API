@@ -211,6 +211,7 @@ async def delete_user_profile(
             detail=str(e)
         )
 
+
 # =========================
 # HEALTH GOALS
 # =========================
