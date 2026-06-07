@@ -100,12 +100,10 @@ class UserProfileServiceV0:
             profile
         )
 
-        profile_repo.add_family_member(
+        return profile_repo.add_family_member(
             parent_profile.profile_id,
             created_profile
         )
-
-        return created_profile
 
     @staticmethod
     def update_user_profile(

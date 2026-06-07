@@ -73,7 +73,7 @@ async def get_user_profile(
 
 
 @router.post(
-    "/",
+    "/family-member",
     summary="Tạo hồ sơ người dùng"
 )
 async def create_user_profile(

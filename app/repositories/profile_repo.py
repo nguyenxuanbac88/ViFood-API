@@ -313,7 +313,7 @@ class UserProfileRepository:
 
         parent.family_members.append(member)
 
-        return parent
+        return parent.family_members
 
     def remove_family_member(
         self,
