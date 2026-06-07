@@ -70,10 +70,45 @@ async def get_user_profile(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=str(e)
         )
+        
+    
+@router.get(
+    "/{profile_id}/family-members",
+    summary="Lấy danh sách thành viên gia đình"
+)
+async def get_family_members(
+    profile_id: int,
+    current_user=Depends(get_current_user)
+):
+
+    try:
+        family_members = UserProfileServiceV0.get_family_members(
+            current_user_id=current_user["user_id"],
+            target_profile_id=profile_id
+        )
+
+        return {
+            "message": "Get family members success",
+            "data": family_members
+        }
+
+    except PermissionError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(e)
+        )
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
 
 
 @router.post(
-    "/family-member",
+    "/family-members",
     summary="Tạo hồ sơ người dùng"
 )
 async def create_user_profile(

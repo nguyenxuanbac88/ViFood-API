@@ -61,6 +61,19 @@ class UserProfileServiceV0:
         raise PermissionError(
             "You cannot access this profile"
         )
+        
+    @staticmethod
+    def get_family_members(
+        current_user_id: int,
+        target_profile_id: int
+    ) -> list[UserProfile]:
+
+        profile = UserProfileServiceV0.get_user_profile(
+            current_user_id,
+            target_profile_id
+        )
+
+        return profile.family_members
 
     @staticmethod
     def create_user_profile(
