@@ -178,6 +178,39 @@ async def update_user_profile(
         )
 
 
+@router.delete(
+    "/{profile_id}",
+    summary="Xóa hồ sơ thành viên gia đình"
+)
+async def delete_user_profile(
+    profile_id: int,
+    current_user=Depends(get_current_user)
+):
+
+    try:
+        UserProfileServiceV0.delete_user_profile(
+            current_user_id=current_user["user_id"],
+            target_profile_id=profile_id
+        )
+
+        return {
+            "message": "Delete user profile success"
+        }
+
+    except PermissionError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(e)
+        )
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+
 # =========================
 # HEALTH GOALS
 # =========================
