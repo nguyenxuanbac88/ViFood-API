@@ -45,7 +45,7 @@ async def get_product_by_id_v0(
 @router.post("/")
 async def create_product(
     product: ProductCreate,
-    current_user = Depends(get_current_user)
+    current_user=Depends(get_current_user)
 ):
     """Tạo mới product"""
 
