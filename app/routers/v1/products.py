@@ -4,7 +4,7 @@ Version v1 để phát triển truy vấn DB, tách biệt với v0.
 """
 from fastapi import APIRouter
 
-from app.models.product import ProductResponse
+from app.models.product import Product
 from app.services.v1.product_service import product_service_v1
 
 
@@ -17,7 +17,7 @@ router = APIRouter(
 
 @router.get(
     "/{id}",
-    response_model=ProductResponse,
+    response_model=Product,
     summary="[v1] Lấy thông tin sản phẩm theo ID",
     description="Version v1 (chuẩn bị cho logic truy vấn DB)"
 )
