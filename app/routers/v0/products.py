@@ -19,7 +19,7 @@ product_service_v0 = ProductServiceV0()
 
 @router.get("/")
 async def list_products(
-    current_user = Depends(get_current_user)
+    current_user=Depends(get_current_user)
 ):
     """Lấy danh sách products của user hiện tại"""
     products = product_service_v0.get_all(user_id=current_user["user_id"])
@@ -32,7 +32,7 @@ async def list_products(
 @router.get("/{product_id}")
 async def get_product_by_id_v0(
     product_id: int,
-    current_user = Depends(get_current_user)
+    current_user=Depends(get_current_user)
 ):
     """Lấy chi tiết product theo ID (chỉ của user hiện tại)"""
 
