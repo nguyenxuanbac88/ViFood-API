@@ -121,7 +121,7 @@ class ProductRepository:
 
     def get_by_id(self, product_id: int, user_id: int) -> Product | None:
         for product in self.db:
-            if product._id == product_id and product.user_id == user_id:
+            if product.id == product_id and product.user_id == user_id:
                 return product
         return None
 
