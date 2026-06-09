@@ -246,40 +246,15 @@ def seed(db: FakeDB):
     # NUTRIENTS
     # =========================
     db.nutrients.extend([
-        Nutrient(
-            id=1,
-            name="Protein",
-            description="Chất đạm giúp xây dựng cơ bắp",
-            effects=[
-                HealthEffect(id=1, title="Tăng hương vị"),
-            ],
-            found_in=[
-                FoodCategory(id=1, name="Thịt đỏ"),
-            ],
-        ),
-        Nutrient(
-            id=2,
-            name="Carbohydrate",
-            description="Tinh bột cung cấp năng lượng",
-            effects=[
-                HealthEffect(id=2, title="Cung cấp năng lượng"),
-            ],
-            found_in=[
-                FoodCategory(id=2, name="Ngũ cốc"),
-            ],
-        ),
-        Nutrient(
-            id=3,
-            name="Fat",
-            description="Chất béo hỗ trợ hấp thụ vitamin",
-            effects=[
-                HealthEffect(id=3, title="Dự trữ năng lượng"),
-            ],
-            found_in=[
-                FoodCategory(id=3, name="Dầu thực vật"),
-            ],
-        )
-    ])
+    Nutrient(id=1, name="Protein", description="Chất đạm giúp xây dựng cơ bắp", image="https://example.com/images/protein.png",
+             effects=[HealthEffect(id=1, title="Tăng hương vị"), HealthEffect(id=2, title="Nguy cơ tăng cholesterol nếu nhiều")],
+             found_in=[FoodCategory(id=1, name="Thịt đỏ"), FoodCategory(id=2, name="Rau bina"), FoodCategory(id=3, name="Đậu")]),
+    Nutrient(id=2, name="Carbohydrate", description="Tinh bột cung cấp năng lượng", image="https://example.com/images/carbohydrate.png",
+             effects=[HealthEffect(id=3, title="Tăng hương vị"), HealthEffect(id=4, title="Nguy cơ tăng cholesterol nếu nhiều")],
+             found_in=[FoodCategory(id=1, name="Thịt đỏ"), FoodCategory(id=2, name="Rau bina"), FoodCategory(id=3, name="Đậu")]),
+    Nutrient(id=3, name="Fat", description="Chất béo hỗ trợ hấp thụ vitamin", image="https://example.com/images/fat.png",
+             effects=[HealthEffect(id=5, title="Tăng hương vị"), HealthEffect(id=6, title="Nguy cơ tăng cholesterol nếu nhiều")],
+             found_in=[FoodCategory(id=1, name="Thịt đỏ"), FoodCategory(id=2, name="Rau bina"), FoodCategory(id=3, name="Đậu")])])
     
     # =========================
     # FOOD CATEGORIES
