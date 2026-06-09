@@ -5,6 +5,7 @@ Base API trả dữ liệu mẫu product (không truy vấn DB).
 from fastapi import APIRouter, Depends
 
 from app.models.product import ProductCreate
+
 from app.services.v0.product_service import ProductServiceV0
 from app.core.dependencies import get_current_user
 
@@ -25,6 +26,26 @@ async def list_products(
     products = product_service_v0.get_all(user_id=current_user["user_id"])
     return {
         "message": "Get products success",
+        "data": products
+    }
+    
+    
+@router.get("/by-date")
+async def get_products_by_date(
+    day: int,
+    month: int,
+    year: int,
+    current_user=Depends(get_current_user)
+):
+    """Lấy danh sách products của user hiện tại theo ngày tháng năm"""
+    products = product_service_v0.get_products_by_date(
+        user_id=current_user["user_id"],
+        day=day,
+        month=month,
+        year=year
+    )
+    return {
+        "message": "Get products by date success",
         "data": products
     }
 

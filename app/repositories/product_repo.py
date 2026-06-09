@@ -36,9 +36,9 @@ fake_products_db: list[Product] = [
         allergen="Có chứa sữa, có thể chứa đậu nành",
         warning="Không dùng cho trẻ dưới 1 tuổi khi không có chỉ định bác sĩ",
         origin="Việt Nam",
-        createdAt="2026-03-02T13:16:00.955Z",
+        createdAt="2026-04-21T13:16:00.955Z",
         timeZone="Asia/Ho_Chi_Minh",
-        createdAtLocal="2026-03-02 20:16:00"
+        createdAtLocal="2026-04-21 20:16:00"
     ),
 
     Product(
@@ -69,9 +69,9 @@ fake_products_db: list[Product] = [
         allergen="Có chứa sữa",
         warning="Không dùng cho trẻ dị ứng đạm sữa bò",
         origin="Việt Nam",
-        createdAt="2026-03-02T13:16:00.955Z",
+        createdAt="2025-12-27T13:16:00.955Z",
         timeZone="Asia/Ho_Chi_Minh",
-        createdAtLocal="2026-03-02 20:16:00"
+        createdAtLocal="2025-12-27 20:16:00"
     ),
 
     Product(
@@ -157,3 +157,19 @@ class ProductRepository:
 
         self.db.append(new_product)
         return new_product
+
+    def get_products_by_date(
+        self,
+        user_id: int,
+        day: int,
+        month: int,
+        year: int
+    ) -> list[Product]:
+        return [
+            product
+            for product in self.db
+            if product.user_id == user_id
+            and product.createdAtLocal.day == day
+            and product.createdAtLocal.month == month
+            and product.createdAtLocal.year == year
+        ]

@@ -16,7 +16,7 @@ from app.core.database import neo4j_db
 # Import routers
 from app.routers import upload, example
 # from app.routers.products_alias import router as products_alias_router
-from app.routers.v0.products import router as products_v0_router
+from app.routers.v0.product import router as product_v0_router
 # from app.routers.v1.products import router as products_v1_router
 from app.routers.v0.disease import router as disease_v0_router
 from app.routers.v0.health_goal import router as health_goal_v0_router
@@ -73,7 +73,7 @@ app.include_router(example.router, prefix=settings.api_prefix)
 # - /api/v0/products/{id}: luôn trỏ về v0
 # - /api/v1/products/{id}: luôn trỏ về v1
 # - /api/products/{id}: alias theo settings.products_default_version (+ canary)
-app.include_router(products_v0_router, prefix=f"{settings.api_prefix}/v0")
+app.include_router(product_v0_router, prefix=f"{settings.api_prefix}/v0")
 # app.include_router(products_v1_router, prefix=f"{settings.api_prefix}/v1")
 # app.include_router(products_alias_router, prefix=settings.api_prefix)
 
