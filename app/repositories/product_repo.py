@@ -1,4 +1,5 @@
-import datetime
+from datetime import date, datetime, timezone
+from zoneinfo import ZoneInfo
 
 from app.models.product import Product, ProductNutrition
 
@@ -36,9 +37,9 @@ fake_products_db: list[Product] = [
         allergen="Có chứa sữa, có thể chứa đậu nành",
         warning="Không dùng cho trẻ dưới 1 tuổi khi không có chỉ định bác sĩ",
         origin="Việt Nam",
-        createdAt="2026-04-21T13:16:00.955Z",
+        createdAt="2026-06-08T05:27:07.241790Z",
         timeZone="Asia/Ho_Chi_Minh",
-        createdAtLocal="2026-04-21 20:16:00"
+        createdAtLocal="2026-06-08T12:27:07.241790+07:00"
     ),
 
     Product(
@@ -69,9 +70,9 @@ fake_products_db: list[Product] = [
         allergen="Có chứa sữa",
         warning="Không dùng cho trẻ dị ứng đạm sữa bò",
         origin="Việt Nam",
-        createdAt="2025-12-27T13:16:00.955Z",
+        createdAt="2026-06-09T01:15:22.241790Z",
         timeZone="Asia/Ho_Chi_Minh",
-        createdAtLocal="2025-12-27 20:16:00"
+        createdAtLocal="2026-06-09T08:15:22.241790+07:00"
     ),
 
     Product(
@@ -100,11 +101,13 @@ fake_products_db: list[Product] = [
         allergen=None,
         warning="Không dùng quá 1 lít/ngày",
         origin="Việt Nam",
-        createdAt="2026-03-02T13:16:00.955Z",
+        createdAt="2026-06-09T11:42:55.241790Z",
         timeZone="Asia/Ho_Chi_Minh",
-        createdAtLocal="2026-03-02 20:16:00"
+        createdAtLocal="2026-06-09T18:42:55.241790+07:00"
     )
 ]
+
+utc_now = datetime.now(timezone.utc)
 
 
 class ProductRepository:
@@ -131,6 +134,16 @@ class ProductRepository:
             for product in self.db
             if product.user_id == user_id
         ])
+
+    def count_by_date(self, user_id: int, day: int, month: int, year: int) -> int:
+        return len([
+            product
+            for product in self.db
+            if product.user_id == user_id
+            and product.createdAtLocal.day == day
+            and product.createdAtLocal.month == month
+            and product.createdAtLocal.year == year
+        ])
         
     def create(self, user_id: int, product: Product) -> Product:
         new_id = max([p.id for p in self.db], default=100) + 1
@@ -150,9 +163,9 @@ class ProductRepository:
             allergen=product.allergen,
             warning=product.warning,
             origin=product.origin,
-            createdAt=datetime.datetime.now(datetime.timezone.utc),
+            createdAt=utc_now,
             timeZone="Asia/Ho_Chi_Minh",
-            createdAtLocal=datetime.datetime.now(datetime.timezone.utc)
+            createdAtLocal=utc_now.astimezone(ZoneInfo("Asia/Ho_Chi_Minh"))
         )
 
         self.db.append(new_product)
