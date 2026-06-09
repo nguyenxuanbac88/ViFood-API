@@ -1,5 +1,6 @@
 from app.models.additive import Additive
 
+
 class AdditiveRepository:
 
     def __init__(self, db):

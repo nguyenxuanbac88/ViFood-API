@@ -83,14 +83,14 @@ class Product(BaseModel):
         
 class ProductCreate(BaseModel):
     product_name: str
-    age_range: str | None = None
-    ingredients: list[str] = []
-    additive: list[str] = []
-    nutrition: ProductNutrition | None = None
-    manufacturer: str | None = None
-    mfg_date: str | None = None
-    expiry_date: str | None = None
-    net_weight: str | None = None
-    allergen: str | None = None
-    warning: str | None = None
-    origin: str | None = None
+    age_range: Optional[str] = None
+    ingredients: List[str] = Field(default_factory=list)
+    additive: List[str] = Field(default_factory=list)
+    nutrition: Optional[ProductNutrition] = None
+    manufacturer: Optional[str] = None
+    mfg_date: Optional[str] = None
+    expiry_date: Optional[str] = None
+    net_weight: Optional[str] = None
+    allergen: Optional[str] = None
+    warning: Optional[str] = None
+    origin: Optional[str] = None

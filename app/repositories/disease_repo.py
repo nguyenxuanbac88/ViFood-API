@@ -1,5 +1,6 @@
 from app.models.disease import Disease
 
+
 class DiseaseRepository:
 
     def __init__(self, db):

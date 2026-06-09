@@ -14,8 +14,7 @@ class ProductServiceV0:
 
     def __init__(self):
         self.product_repo = ProductRepository(db)
-
-
+    
     def get_all(self, user_id: int) -> List[Product]:
         """Lấy danh sách products theo user"""
         return self.product_repo.get_all(user_id)

@@ -1,5 +1,6 @@
 from app.models.food_category import FoodCategory
 
+
 class FoodCategoryRepository:
     
     def __init__(self, db):

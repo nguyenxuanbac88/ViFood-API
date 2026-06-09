@@ -1,5 +1,6 @@
 from app.models.allergy import Allergy
 
+
 class AllergyRepository:
 
     def __init__(self, db):

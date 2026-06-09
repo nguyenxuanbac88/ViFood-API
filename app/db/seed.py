@@ -9,8 +9,7 @@ from app.models.food_category import FoodCategory
 from app.models.allergy import Allergy
 from app.models.disease import Disease
 from app.models.health_goal import HealthGoal
-from app.models.user_profile import UserProfile
-from app.models.user import User
+# user and user_profile not required in seed data
 
 
 def seed(db: FakeDB):
@@ -238,38 +237,57 @@ def seed(db: FakeDB):
     # HEALTH GOALS
     # =========================
     db.health_goals.extend([
-    HealthGoal(id=1, name="Giảm cân"),
-    HealthGoal(id=2, name="Tăng cơ"),
-    HealthGoal(id=3, name="Duy trì sức khỏe")])
+        HealthGoal(id=1, name="Giảm cân"),
+        HealthGoal(id=2, name="Tăng cơ"),
+        HealthGoal(id=3, name="Duy trì sức khỏe"),
+    ])
 
     # =========================
     # NUTRIENTS
     # =========================
     db.nutrients.extend([
-    Nutrient(id=1, name="Protein", description="Chất đạm giúp xây dựng cơ bắp", image="https://example.com/images/protein.png",
-             effects=[HealthEffect(id=1, title="Tăng hương vị"), HealthEffect(id=2, title="Nguy cơ tăng cholesterol nếu nhiều")],
-             found_in=[FoodCategory(id=1, name="Thịt đỏ"), FoodCategory(id=2, name="Rau bina"), FoodCategory(id=3, name="Đậu")]),
-    Nutrient(id=2, name="Carbohydrate", description="Tinh bột cung cấp năng lượng", image="https://example.com/images/carbohydrate.png",
-             effects=[HealthEffect(id=3, title="Tăng hương vị"), HealthEffect(id=4, title="Nguy cơ tăng cholesterol nếu nhiều")],
-             found_in=[FoodCategory(id=1, name="Thịt đỏ"), FoodCategory(id=2, name="Rau bina"), FoodCategory(id=3, name="Đậu")]),
-    Nutrient(id=3, name="Fat", description="Chất béo hỗ trợ hấp thụ vitamin", image="https://example.com/images/fat.png",
-             effects=[HealthEffect(id=5, title="Tăng hương vị"), HealthEffect(id=6, title="Nguy cơ tăng cholesterol nếu nhiều")],
-             found_in=[FoodCategory(id=1, name="Thịt đỏ"), FoodCategory(id=2, name="Rau bina"), FoodCategory(id=3, name="Đậu")])])
+        Nutrient(
+            id=1,
+            name="Protein",
+            description="Chất đạm giúp xây dựng cơ bắp",
+            image="https://example.com/images/protein.png",
+            effects=[HealthEffect(id=1, title="Tăng hương vị"), HealthEffect(id=2, title="Nguy cơ tăng cholesterol nếu nhiều")],
+            found_in=[FoodCategory(id=1, name="Thịt đỏ"), FoodCategory(id=2, name="Rau bina"), FoodCategory(id=3, name="Đậu")],
+        ),
+        Nutrient(
+            id=2,
+            name="Carbohydrate",
+            description="Tinh bột cung cấp năng lượng",
+            image="https://example.com/images/carbohydrate.png",
+            effects=[HealthEffect(id=3, title="Tăng hương vị"), HealthEffect(id=4, title="Nguy cơ tăng cholesterol nếu nhiều")],
+            found_in=[FoodCategory(id=1, name="Thịt đỏ"), FoodCategory(id=2, name="Rau bina"), FoodCategory(id=3, name="Đậu")],
+        ),
+        Nutrient(
+            id=3,
+            name="Fat",
+            description="Chất béo hỗ trợ hấp thụ vitamin",
+            image="https://example.com/images/fat.png",
+            effects=[HealthEffect(id=5, title="Tăng hương vị"), HealthEffect(id=6, title="Nguy cơ tăng cholesterol nếu nhiều")],
+            found_in=[FoodCategory(id=1, name="Thịt đỏ"), FoodCategory(id=2, name="Rau bina"), FoodCategory(id=3, name="Đậu")],
+        ),
+    ])
     
     # =========================
     # FOOD CATEGORIES
     # =========================
     
     db.food_categories.extend([
-    FoodCategory(id=1, name="Trái cây"),
-    FoodCategory(id=2, name="Rau củ"),
-    FoodCategory(id=3, name="Ngũ cốc")])
+        FoodCategory(id=1, name="Trái cây"),
+        FoodCategory(id=2, name="Rau củ"),
+        FoodCategory(id=3, name="Ngũ cốc"),
+    ])
     
     # =========================
     # HEALTH EFFECTS
     # =========================
     
     db.health_effects.extend([
-    HealthEffect(id=1, title="Tăng cường hệ miễn dịch"),
-    HealthEffect(id=2, title="Hỗ trợ tiêu hóa"),
-    HealthEffect(id=3, title="Giảm nguy cơ mắc bệnh tim mạch")])
+        HealthEffect(id=1, title="Tăng cường hệ miễn dịch"),
+        HealthEffect(id=2, title="Hỗ trợ tiêu hóa"),
+        HealthEffect(id=3, title="Giảm nguy cơ mắc bệnh tim mạch"),
+    ])

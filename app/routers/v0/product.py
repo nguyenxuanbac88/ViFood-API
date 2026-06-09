@@ -1,6 +1,5 @@
-from datetime import date
+"""Product v0 routes"""
 from fastapi import APIRouter, Depends
-
 from app.models.product import ProductCreate
 from app.services.v0.product_service import ProductServiceV0
 from app.core.dependencies import get_current_user
