@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.repositories.user_repo import UserRepository
 from app.repositories.profile_repo import UserProfileRepository
 
+from app.services.v0.auth_service import AuthServiceV0
 from app.services.v0.user_profile_service import (
     UserProfileServiceV0
 )
@@ -18,6 +19,9 @@ router = APIRouter(
     tags=["User Profile v0"]
 )
 
+profile_service = UserProfileServiceV0()
+user_service = AuthServiceV0()
+user_repo = UserRepository(db)
 profile_repo = UserProfileRepository(db)
 
 
@@ -31,7 +35,7 @@ profile_repo = UserProfileRepository(db)
 )
 async def get_all_user_profiles():
 
-    profiles = UserProfileServiceV0.get_all_user_profiles()
+    profiles = profile_service.get_all_user_profiles()
 
     return {
         "message": "Get all user profiles success",
@@ -49,7 +53,7 @@ async def get_user_profile(
 ):
 
     try:
-        profile = UserProfileServiceV0.get_user_profile(
+        profile = profile_service.get_user_profile(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id
         )
@@ -84,7 +88,7 @@ async def get_family_members(
 ):
 
     try:
-        family_members = UserProfileServiceV0.get_family_members(
+        family_members = profile_service.get_family_members(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id
         )
@@ -119,7 +123,7 @@ async def create_user_profile(
 ):
 
     try:
-        profile = UserProfileServiceV0.create_user_profile(
+        profile = profile_service.create_user_profile(
             current_user_id=current_user["user_id"],
             first_name=payload.first_name,
             last_name=payload.last_name,
@@ -156,7 +160,7 @@ async def update_user_profile(
     current_user=Depends(get_current_user)
 ):
     try:
-        profile = UserProfileServiceV0.update_user_profile(
+        profile = profile_service.update_user_profile(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id,
             payload=payload
@@ -190,7 +194,7 @@ async def delete_user_profile(
 ):
 
     try:
-        profile = UserProfileServiceV0.delete_user_profile(
+        profile = profile_service.delete_user_profile(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id
         )
@@ -229,7 +233,7 @@ async def get_health_goals(
 ):
 
     try:
-        goals = UserProfileServiceV0.get_health_goals(
+        goals = profile_service.get_health_goals(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id
         )
@@ -265,7 +269,7 @@ async def add_health_goal(
 ):
 
     try:
-        profile = UserProfileServiceV0.add_health_goal(
+        profile = profile_service.add_health_goal(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id,
             health_goal_id=health_goal_id
@@ -302,7 +306,7 @@ async def delete_health_goal(
 ):
 
     try:
-        profile = UserProfileServiceV0.delete_health_goal(
+        profile = profile_service.delete_health_goal(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id,
             health_goal_id=health_goal_id
@@ -342,7 +346,7 @@ async def get_diseases(
 ):
 
     try:
-        diseases = UserProfileServiceV0.get_diseases(
+        diseases = profile_service.get_diseases(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id
         )
@@ -378,7 +382,7 @@ async def add_disease(
 ):
 
     try:
-        profile = UserProfileServiceV0.add_disease(
+        profile = profile_service.add_disease(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id,
             disease_id=disease_id
@@ -415,7 +419,7 @@ async def delete_disease(
 ):
 
     try:
-        profile = UserProfileServiceV0.delete_disease(
+        profile = profile_service.delete_disease(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id,
             disease_id=disease_id
@@ -455,7 +459,7 @@ async def get_allergies(
 ):
 
     try:
-        allergies = UserProfileServiceV0.get_allergies(
+        allergies = profile_service.get_allergies(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id
         )
@@ -491,7 +495,7 @@ async def add_allergy(
 ):
 
     try:
-        profile = UserProfileServiceV0.add_allergy(
+        profile = profile_service.add_allergy(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id,
             allergy_id=allergy_id
@@ -528,7 +532,7 @@ async def delete_allergy(
 ):
 
     try:
-        profile = UserProfileServiceV0.delete_allergy(
+        profile = profile_service.delete_allergy(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id,
             allergy_id=allergy_id
@@ -568,7 +572,7 @@ async def me(
 
     user_id = current_user["user_id"]
 
-    user = UserRepository.get_user_by_id(
+    user = user_repo.get_user_by_id(
         user_id
     )
 

@@ -2,7 +2,6 @@ from app.models.user_profile import UserProfile
 from app.models.health_goal import HealthGoal
 from app.models.disease import Disease
 from app.models.allergy import Allergy
-from app.fake_db import fake_user_profiles_db
 
 
 class UserProfileRepository:
@@ -14,10 +13,10 @@ class UserProfileRepository:
     # =========================
 
     def get_all_user_profiles(self) -> list[UserProfile]:
-        return fake_user_profiles_db
+        return self.db.user_profiles
 
     def count_user_profiles(self) -> int:
-        return len(fake_user_profiles_db)
+        return len(self.db.user_profiles)
 
     def get_user_profile_by_id(
         self,
@@ -27,7 +26,7 @@ class UserProfileRepository:
         return next(
             (
                 profile
-                for profile in fake_user_profiles_db
+                for profile in self.db.user_profiles
                 if profile.profile_id == profile_id
             ),
             None
@@ -41,7 +40,7 @@ class UserProfileRepository:
         return next(
             (
                 profile
-                for profile in fake_user_profiles_db
+                for profile in self.db.user_profiles
                 if profile.userId == user_id
             ),
             None
@@ -52,7 +51,7 @@ class UserProfileRepository:
         profile: UserProfile
     ) -> UserProfile:
 
-        fake_user_profiles_db.append(profile)
+        self.db.user_profiles.append(profile)
 
         return profile
 
@@ -98,7 +97,7 @@ class UserProfileRepository:
                     if member.profile_id != profile_id
                 ]
 
-        fake_user_profiles_db.remove(profile)
+        self.db.user_profiles.remove(profile)
         
         return parent.family_members if parent else []
 
@@ -124,7 +123,7 @@ class UserProfileRepository:
                 ]
 
         # Xóa profile khỏi database
-        fake_user_profiles_db.remove(member)
+        self.db.user_profiles.remove(member)
 
         return True
 
