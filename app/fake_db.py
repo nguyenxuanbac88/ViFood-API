@@ -160,13 +160,3 @@ nutrients = [
     Nutrient(id=3, name="Fat", description="Chất béo hỗ trợ hấp thụ vitamin", image="https://example.com/images/fat.png",
              effects=[HealthEffect(id=5, title="Tăng hương vị"), HealthEffect(id=6, title="Nguy cơ tăng cholesterol nếu nhiều")],
              found_in=[FoodCategory(id=1, name="Thịt đỏ"), FoodCategory(id=2, name="Rau bina"), FoodCategory(id=3, name="Đậu")])]
-
-
-# =========================
-# HEALTH GOALS
-# =========================
-
-health_goals = [
-    HealthGoal(id=1, name="Giảm cân"),
-    HealthGoal(id=2, name="Tăng cơ"),
-    HealthGoal(id=3, name="Duy trì sức khỏe")]
