@@ -281,7 +281,20 @@ def seed(db: FakeDB):
         )
     ])
     
+    # =========================
+    # FOOD CATEGORIES
+    # =========================
+    
     db.food_categories.extend([
     FoodCategory(id=1, name="Trái cây"),
     FoodCategory(id=2, name="Rau củ"),
     FoodCategory(id=3, name="Ngũ cốc")])
+    
+    # =========================
+    # HEALTH EFFECTS
+    # =========================
+    
+    db.health_effects.extend([
+    HealthEffect(id=1, title="Tăng cường hệ miễn dịch"),
+    HealthEffect(id=2, title="Hỗ trợ tiêu hóa"),
+    HealthEffect(id=3, title="Giảm nguy cơ mắc bệnh tim mạch")])
