@@ -121,9 +121,51 @@ def seed(db: FakeDB):
     # INGREDIENTS
     # =========================
     db.ingredients.extend([
-        Ingredient(id=1, name="Gạo"),
-        Ingredient(id=2, name="Thịt gà"),
-        Ingredient(id=3, name="Rau cải"),
+        Ingredient(
+            id=1,
+            name="Gạo",
+            description="Nguyên liệu chính để nấu cơm",
+            image="https://example.com/images/rice.png",
+            effects=[
+                HealthEffect(id=1, title="Tăng hương vị"),
+                HealthEffect(id=2, title="Nguy cơ tăng cholesterol nếu nhiều"),
+            ],
+            found_in=[
+                FoodCategory(id=1, name="Thịt đỏ"),
+                FoodCategory(id=2, name="Rau bina"),
+                FoodCategory(id=3, name="Đậu"),
+            ],
+        ),
+        Ingredient(
+            id=2,
+            name="Thịt gà",
+            description="Nguyên liệu giàu protein",
+            image="https://example.com/images/chicken.png",
+            effects=[
+                HealthEffect(id=3, title="Tăng hương vị"),
+                HealthEffect(id=4, title="Nguy cơ tăng cholesterol nếu nhiều"),
+            ],
+            found_in=[
+                FoodCategory(id=1, name="Thịt đỏ"),
+                FoodCategory(id=2, name="Rau bina"),
+                FoodCategory(id=3, name="Đậu"),
+            ],
+        ),
+        Ingredient(
+            id=3,
+            name="Rau cải",
+            description="Nguyên liệu giàu chất xơ",
+            image="https://example.com/images/vegetables.png",
+            effects=[
+                HealthEffect(id=5, title="Tăng hương vị"),
+                HealthEffect(id=6, title="Nguy cơ tăng cholesterol nếu nhiều"),
+            ],
+            found_in=[
+                FoodCategory(id=1, name="Thịt đỏ"),
+                FoodCategory(id=2, name="Rau bina"),
+                FoodCategory(id=3, name="Đậu"),
+            ],
+        ),
     ])
 
     # =========================
