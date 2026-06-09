@@ -221,12 +221,3 @@ health_goals = [
     HealthGoal(id=1, name="Giảm cân"),
     HealthGoal(id=2, name="Tăng cơ"),
     HealthGoal(id=3, name="Duy trì sức khỏe")]
-
-# =========================
-# FOOD CATEGORIES
-# =========================
-
-foodCategories = [
-    FoodCategory(id=1, name="Trái cây"),
-    FoodCategory(id=2, name="Rau củ"),
-    FoodCategory(id=3, name="Ngũ cốc")]

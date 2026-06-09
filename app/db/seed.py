@@ -230,3 +230,8 @@ def seed(db: FakeDB):
             ],
         )
     ])
+    
+    db.food_categories.extend([
+    FoodCategory(id=1, name="Trái cây"),
+    FoodCategory(id=2, name="Rau củ"),
+    FoodCategory(id=3, name="Ngũ cốc")])

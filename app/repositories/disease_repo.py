@@ -1,4 +1,3 @@
-from app.db import db
 from app.models.disease import Disease
 
 class DiseaseRepository:

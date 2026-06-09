@@ -1,6 +1,7 @@
 from typing import List
 from app.models.allergy import Allergy
 from app.models.disease import Disease
+from app.models.food_category import FoodCategory
 from app.models.health_goal import HealthGoal
 from app.models.product import Product
 from app.models.ingredient import Ingredient
@@ -24,6 +25,7 @@ class FakeDB:
         self.allergies: List[Allergy] = []
         self.diseases: List[Disease] = []
         self.health_goals: List[HealthGoal] = []
+        self.food_categories: List[FoodCategory] = []
 
         # =====================
         # OPTIONAL INDEX (tăng tốc lookup)
