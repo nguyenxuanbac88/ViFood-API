@@ -1,9 +1,6 @@
 from app.models.food_category import FoodCategory
 
-foodCategories = [
-    FoodCategory(id=1, name="Trái cây"),
-    FoodCategory(id=2, name="Rau củ"),
-    FoodCategory(id=3, name="Ngũ cốc")]
+from app.fake_db import foodCategories
 
 
 class FoodCategoryServiceV0:

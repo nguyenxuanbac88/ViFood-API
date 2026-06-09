@@ -1,9 +1,5 @@
 from app.models.health_goal import HealthGoal
-
-health_goals = [
-    HealthGoal(id=1, name="Giảm cân"),
-    HealthGoal(id=2, name="Tăng cơ"),
-    HealthGoal(id=3, name="Duy trì sức khỏe")]
+from app.fake_db import health_goals
 
 
 class HealthGoalServiceV0:

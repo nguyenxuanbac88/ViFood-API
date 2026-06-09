@@ -1,7 +1,5 @@
 from app.models.user import User
-
-fake_users_db: list[User] = []
-
+from app.fake_db import fake_users_db
 
 class UserRepository:
 

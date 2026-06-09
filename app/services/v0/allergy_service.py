@@ -1,9 +1,6 @@
 from app.models.allergy import Allergy
 
-allergies = [
-    Allergy(id=1, name="Sữa"),
-    Allergy(id=2, name="Gluten"),
-    Allergy(id=3, name="Đậu phộng")]
+from app.fake_db import allergies
 
 
 class AllergyServiceV0:
