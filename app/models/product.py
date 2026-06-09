@@ -48,9 +48,15 @@ class Product(BaseModel):
 
     origin: Optional[str] = Field(default=None, example="Việt Nam")
 
+<<<<<<< HEAD
     createdAt: datetime = Field(..., example="2026-06-09T05:27:07.241790Z")
     timeZone: str = Field(..., example="Asia/Ho_Chi_Minh")
     createdAtLocal: datetime = Field(..., example="2026-06-09T12:27:07.241790+07:00")
+=======
+    createdAt: datetime = Field(..., example="2026-03-02T13:16:00.955Z")
+    timeZone: str = Field(..., example="Asia/Ho_Chi_Minh")
+    createdAtLocal: datetime = Field(..., example="2026-03-02 20:16:00")
+>>>>>>> origin/develop
 
     class Config:
         populate_by_name = True
