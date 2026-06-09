@@ -214,64 +214,6 @@ ingredients = [
 ]
 
 # =========================
-# ADDITIVES
-# =========================
-
-additives = [
-    Additive(
-        id=1,
-        name="Curcumin",
-        code="E100",
-        description="Curcumin - chất tạo màu vàng tự nhiên",
-        image="https://example.com/images/e100.png",
-        effects=[
-            HealthEffect(id=1, title="Tăng hương vị"),
-            HealthEffect(id=2, title="Nguy cơ tăng cholesterol nếu nhiều")
-        ],
-        found_in=[
-            FoodCategory(id=1, name="Thịt đỏ"),
-            FoodCategory(id=2, name="Rau bina"),
-            FoodCategory(id=3, name="Đậu")
-        ]
-    ),
-    Additive(
-        id=2,
-        name="Sorbic Acid",
-        code="E200",
-        description="Sorbic Acid - chất bảo quản chống nấm mốc",
-        image="https://example.com/images/e200.png",
-        effects=[
-            HealthEffect(id=2, title="Chất bảo quản")
-        ],
-        found_in=[
-            FoodCategory(id=2, name="Snacks", description="Đồ ăn vặt")
-        ]
-    ),
-    Additive(
-        id=3,
-        name="Ascorbic Acid",
-        code="E300",
-        description="Ascorbic Acid - Vitamin C, chất chống oxy hóa",
-        image="https://example.com/images/e300.png",
-        effects=[
-            HealthEffect(id=3, title="Chất chống oxy hóa")
-        ],
-        found_in=[
-            FoodCategory(id=3, name="Đồ uống có ga", description="Nước ngọt")
-        ]
-    )
-]
-
-# =========================
-# ALLERGIES
-# =========================
-
-allergies = [
-    Allergy(id=1, name="Sữa"),
-    Allergy(id=2, name="Gluten"),
-    Allergy(id=3, name="Đậu phộng")]
-
-# =========================
 # HEALTH GOALS
 # =========================
 

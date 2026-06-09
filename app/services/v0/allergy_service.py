@@ -1,34 +1,66 @@
 from app.models.allergy import Allergy
-
-from app.fake_db import allergies
+from app.models.food_category import FoodCategory
+from app.models.health_effect import HealthEffect
+from app.repositories.allergy_repo import AllergyRepository
+from app.db import db
 
 
 class AllergyServiceV0:
 
-    @staticmethod
-    def get_all_allergies(): return allergies
+    def __init__(self):
+        self.repo = AllergyRepository(db)
 
-    @staticmethod
-    def get_allergy_by_id(allergy_id: int):
-        return next((a for a in allergies if a.id == allergy_id), None)
-    
-    @staticmethod
-    def create_allergy(name: str):
-        new_id = max(a.id for a in allergies) + 1 if allergies else 1
-        new_allergy = Allergy(id=new_id, name=name)
-        allergies.append(new_allergy)
-        return new_allergy
-    
-    @staticmethod
-    def update_allergy(allergy_id: int, name: str):
-        allergy = AllergyServiceV0.get_allergy_by_id(allergy_id)
-        if allergy:
-            allergy.name = name
-            return allergy
-        return None
-    
-    @staticmethod
-    def delete_allergy(allergy_id: int):
-        global allergies
-        allergies = [a for a in allergies if a.id != allergy_id]
-        return {"message": "Allergy deleted successfully"}
+    def get_all_allergies(self):
+        return self.repo.get_all()
+
+    def get_allergy_by_id(self, allergy_id: int):
+        return self.repo.get_by_id(allergy_id)
+    def create_allergy(
+        self,
+        name: str,
+        description: str | None = None,
+        code: str | None = None,
+        image: str | None = None,
+        effects: list[HealthEffect] | None = None,
+        found_in: list[FoodCategory] | None = None
+    ):
+        new_id = len(self.repo.get_all()) + 1
+
+        new_allergy = Allergy(
+            id=new_id,
+            name=name,
+            code=code,
+            description=description,
+            image=image,
+            effects=effects or [],
+            found_in=found_in or []
+        )
+
+        return self.repo.create(new_allergy)
+
+    def update_allergy(
+        self,
+        allergy_id: int,
+        name: str,
+        description: str | None = None,
+        code: str | None = None,
+        image: str | None = None,
+        effects: list[HealthEffect] | None = None,
+        found_in: list[FoodCategory] | None = None
+    ):
+        allergy = self.repo.get_by_id(allergy_id)
+
+        if not allergy:
+            return None
+
+        allergy.name = name
+        allergy.description = description
+        allergy.code = code
+        allergy.image = image
+        allergy.effects = effects or []
+        allergy.found_in = found_in or []
+
+        return allergy
+
+    def delete_allergy(self, allergy_id: int):
+        return self.repo.delete(allergy_id)
