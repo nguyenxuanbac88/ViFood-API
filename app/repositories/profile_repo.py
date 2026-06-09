@@ -6,6 +6,8 @@ from app.fake_db import fake_user_profiles_db
 
 
 class UserProfileRepository:
+    def __init__(self, db):
+        self.db = db
 
     # =========================
     # BASIC

@@ -12,7 +12,9 @@ from app.repositories.profile_repo import UserProfileRepository
 
 from app.schemas.update_profile import UpdateProfileRequest
 
-profile_repo = UserProfileRepository()
+from app.db import db
+
+profile_repo = UserProfileRepository(db)
 
 
 class UserProfileServiceV0:

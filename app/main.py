@@ -13,6 +13,9 @@ from app.utils.file_utils import ensure_directory_exists
 
 from app.core.database import neo4j_db
 
+from app.db import db
+from app.db.seed import seed
+
 # Import routers
 from app.routers import upload, example
 # from app.routers.products_alias import router as products_alias_router
@@ -188,6 +191,7 @@ async def startup_event():
     - Load models
     - etc.
     """
+    seed(db)  # Seed dữ liệu giả định vào database
     print(f"🚀 Starting {settings.app_name} v{settings.app_version}")
     print(f"📝 Docs: http://{settings.host}:{settings.port}/docs")
     print(f"🔧 API Prefix: {settings.api_prefix}")

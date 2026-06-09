@@ -9,6 +9,8 @@ from app.services.v0.user_profile_service import (
 
 from app.schemas.update_profile import UpdateProfileRequest
 
+from app.db import db
+
 from app.core.dependencies import get_current_user
 
 router = APIRouter(
@@ -16,7 +18,7 @@ router = APIRouter(
     tags=["User Profile v0"]
 )
 
-profile_repo = UserProfileRepository()
+profile_repo = UserProfileRepository(db)
 
 
 # =========================

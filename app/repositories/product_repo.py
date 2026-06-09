@@ -5,10 +5,6 @@ from app.models.product import Product
 
 from app.fake_db import fake_products_db
 
-# =========================
-# FAKE DATABASE
-# =========================
-
 utc_now = datetime.now(timezone.utc)
 
 
