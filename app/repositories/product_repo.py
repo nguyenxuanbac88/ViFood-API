@@ -3,25 +3,23 @@ from zoneinfo import ZoneInfo
 
 from app.models.product import Product
 
-from app.fake_db import fake_products_db
-
 utc_now = datetime.now(timezone.utc)
 
 
 class ProductRepository:
     
-    def __init__(self):
-        self.db = fake_products_db
+    def __init__(self, db):
+        self.db = db
 
     def get_all(self, user_id: int) -> list[Product]:
         return [
             product
-            for product in self.db
+            for product in self.db.products
             if product.user_id == user_id
         ]
 
     def get_by_id(self, product_id: int, user_id: int) -> Product | None:
-        for product in self.db:
+        for product in self.db.products:
             if product.id == product_id and product.user_id == user_id:
                 return product
         return None
@@ -29,14 +27,14 @@ class ProductRepository:
     def count(self, user_id: int) -> int:
         return len([
             product
-            for product in self.db
+            for product in self.db.products
             if product.user_id == user_id
         ])
 
     def count_by_date(self, user_id: int, day: int, month: int, year: int) -> int:
         return len([
             product
-            for product in self.db
+            for product in self.db.products
             if product.user_id == user_id
             and product.createdAtLocal.day == day
             and product.createdAtLocal.month == month
@@ -44,7 +42,7 @@ class ProductRepository:
         ])
         
     def create(self, user_id: int, product: Product) -> Product:
-        new_id = max([p.id for p in self.db], default=100) + 1
+        new_id = max([p.id for p in self.db.products], default=100) + 1
 
         new_product = Product(
             _id=new_id,
@@ -66,7 +64,7 @@ class ProductRepository:
             createdAtLocal=utc_now.astimezone(ZoneInfo("Asia/Ho_Chi_Minh"))
         )
 
-        self.db.append(new_product)
+        self.db.products.append(new_product)
         return new_product
 
     def get_products_by_date(
@@ -78,7 +76,7 @@ class ProductRepository:
     ) -> list[Product]:
         return [
             product
-            for product in self.db
+            for product in self.db.products
             if product.user_id == user_id
             and product.createdAtLocal.day == day
             and product.createdAtLocal.month == month
