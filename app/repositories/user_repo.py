@@ -64,20 +64,19 @@ class UserRepository(BaseRepository):
         return self.read(query)
 
     def get_user_by_id(self, user_id: str):
+        def query(tx):
+            result = tx.run("""
+                MATCH (u:User {id: $id})
+                RETURN u
+                LIMIT 1
+            """, {"id": user_id}).single()
 
-            def query(tx):
-                result = tx.run("""
-                    MATCH (u:User {id: $id})
-                    RETURN u
-                    LIMIT 1
-                """, {"id": user_id}).single()
+            if not result:
+                return None
 
-                if not result:
-                    return None
+            return dict(result["u"])
 
-                return dict(result["u"])
-
-            return self.read(query)
+        return self.read(query)
 
     def get_all_users(self):
 
@@ -126,16 +125,15 @@ class UserRepository(BaseRepository):
         return self.write(query)
 
     def count_users(self):
+        def query(tx):
+            result = tx.run("""
+                MATCH (u:User)
+                RETURN count(u) AS total
+            """).single()
 
-            def query(tx):
-                result = tx.run("""
-                    MATCH (u:User)
-                    RETURN count(u) AS total
-                """).single()
+            return result["total"]
 
-                return result["total"]
-
-            return self.read(query)
+        return self.read(query)
 
     def get_current_user(self, user_id: str):
 

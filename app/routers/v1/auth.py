@@ -9,8 +9,6 @@ from app.services.v1.auth_service import AuthServiceV1
 
 from app.core.database import neo4j_db
 
-from app.db import db
-
 router = APIRouter(
     prefix="/auth",
     tags=["Auth V1"]

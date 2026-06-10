@@ -1,12 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.repositories.user_repo import UserRepository
 from app.repositories.profile_repo import UserProfileRepository
-
-from app.services.v0.auth_service import AuthServiceV0
-from app.services.v0.user_profile_service import (
-    UserProfileServiceV0
-)
 
 from app.services.v1.profile_service_v1 import (
     UserProfileServiceV1
@@ -15,8 +9,6 @@ from app.services.v1.profile_service_v1 import (
 from app.schemas.update_profile import UpdateProfileRequest
 
 from app.core.database import neo4j_db
-
-from app.db import db
 
 from app.core.dependencies import get_current_user
 

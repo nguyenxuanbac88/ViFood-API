@@ -4,9 +4,6 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from app.models.health_goal import HealthGoal
-from app.models.disease import Disease
-from app.models.allergy import Allergy
 
 
 class UserProfile(BaseModel):

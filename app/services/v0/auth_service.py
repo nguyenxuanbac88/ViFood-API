@@ -11,10 +11,9 @@ from app.db import db
 
 
 class AuthServiceV0:
-
-    # def __init__(self):
-    #     # self.user_repo = UserRepository(db)
-    #     self.profile_repo = UserProfileRepository(db)
+    def __init__(self):
+        self.user_repo = UserRepository(db)
+        self.profile_repo = UserProfileRepository(db)
 
     def register_user(self, data):
         existing_user = self.user_repo.get_user_by_email(data.email)
