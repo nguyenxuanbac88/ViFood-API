@@ -13,4 +13,8 @@ def now_iso() -> str:
 def to_vn_time(dt):
     if dt is None:
         return None
+
+    if isinstance(dt, str):
+        dt = datetime.fromisoformat(dt)
+
     return dt.astimezone(VN_TZ)

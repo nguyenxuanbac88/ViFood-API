@@ -83,18 +83,16 @@ profile_repo = UserProfileRepository(neo4j_db)
         
     
 @router.get(
-    "/{profile_id}/family-members",
+    "/family-members",
     summary="Lấy danh sách thành viên gia đình"
 )
 async def get_family_members(
-    profile_id: int,
     current_user=Depends(get_current_user)
 ):
 
     try:
         family_members = profile_service.get_family_members(
-            current_user_id=current_user["user_id"],
-            target_profile_id=profile_id
+            current_user_id=current_user["user_id"]
         )
 
         return {

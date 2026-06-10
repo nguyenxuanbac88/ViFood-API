@@ -33,58 +33,30 @@ class UserProfileServiceV1:
     # PROFILE
     # =========================
 
-    def get_all_user_profiles(self) -> list[UserProfile]:
-        return self.profile_repo.get_all_user_profiles()
-
     def get_user_profile(
         self,
         current_user_id: int,
-        target_profile_id: int
     ) -> UserProfile:
 
-        profile = self.profile_repo.get_user_profile_by_id(
-            target_profile_id
+        profile = self.profile_repo.get_user_profile_by_user_id(
+            current_user_id
         )
 
         if not profile:
             raise ValueError("UserProfile not found")
 
-        # 1. owner access
-        if profile.userId == current_user_id:
-            return profile
-
-        # 2. parent access
-        if profile.parent_profile_id:
-            parent = self.profile_repo.get_user_profile_by_id(
-                profile.parent_profile_id
-            )
-
-            if parent and parent.userId == current_user_id:
-                return profile
-
-        # 3. family access
-        if any(
-            member.userId == current_user_id
-            for member in profile.family_members
-        ):
-            return profile
-
-        raise PermissionError(
-            "You cannot access this profile"
-        )
+        
         
     def get_family_members(
         self,
         current_user_id: int,
-        target_profile_id: int
     ) -> list[UserProfile]:
 
-        profile = self.get_user_profile(
-            current_user_id,
-            target_profile_id
+        profile = self.profile_repo.get_family_members(
+            current_user_id
         )
 
-        return profile.family_members
+        return profile
 
     def create_user_profile(
         self,
