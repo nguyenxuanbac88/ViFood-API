@@ -33,6 +33,9 @@ from app.routers.v0.search_nutrition import router as search_nutrition_v0_router
 from app.routers.v0.user_profile import router as user_profile_v0_router
 from app.routers.v0.auth import router as auth_v0_router
 
+# V1
+from app.routers.v1.auth import router as auth_v1_router
+
 
 # Tạo FastAPI app instance
 app = FastAPI(
@@ -117,6 +120,10 @@ app.include_router(user_profile_v0_router, prefix=f"{settings.api_prefix}/v0")
 
 # Auth router (v0)
 app.include_router(auth_v0_router, prefix=f"{settings.api_prefix}/v0")
+
+# ==================== V1  ====================
+
+app.include_router(auth_v1_router, prefix=f"{settings.api_prefix}/v1")
 
 
 # ==================== Root Endpoints ====================

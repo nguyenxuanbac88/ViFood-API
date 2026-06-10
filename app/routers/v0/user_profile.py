@@ -21,7 +21,7 @@ router = APIRouter(
 
 profile_service = UserProfileServiceV0()
 user_service = AuthServiceV0()
-user_repo = UserRepository(db)
+# user_repo = UserRepository(db)
 profile_repo = UserProfileRepository(db)
 
 

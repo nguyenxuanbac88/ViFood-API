@@ -33,8 +33,7 @@ def register(data: RegisterRequest):
             "email": user.email,
             "is_active": user.is_active,
             "created_at": user.created_at,
-            "updated_at": user.updated_at,
-            "profile_id": user.profile_id
+            "updated_at": user.updated_at
         }
     }
     
