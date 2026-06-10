@@ -30,8 +30,8 @@ from app.routers.v0.additive import router as additive_v0_router
 from app.routers.v0.health_effect import router as health_effect_v0_router
 from app.routers.v0.food_category import router as food_category_v0_router
 from app.routers.v0.search_nutrition import router as search_nutrition_v0_router
-from app.routers.v0.user_profile import router as user_profile_v0_router
-from app.routers.v0.auth import router as auth_v0_router
+# from app.routers.v0.user_profile import router as user_profile_v0_router
+# from app.routers.v0.auth import router as auth_v0_router
 
 # V1
 from app.routers.v1.auth import router as auth_v1_router
@@ -116,10 +116,10 @@ app.include_router(food_category_v0_router, prefix=f"{settings.api_prefix}/v0")
 app.include_router(search_nutrition_v0_router, prefix=f"{settings.api_prefix}/v0")
 
 # User Profile router (v0)
-app.include_router(user_profile_v0_router, prefix=f"{settings.api_prefix}/v0")
+# app.include_router(user_profile_v0_router, prefix=f"{settings.api_prefix}/v0")
 
 # Auth router (v0)
-app.include_router(auth_v0_router, prefix=f"{settings.api_prefix}/v0")
+# app.include_router(auth_v0_router, prefix=f"{settings.api_prefix}/v0")
 
 # ==================== V1  ====================
 

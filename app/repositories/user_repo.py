@@ -1,6 +1,7 @@
 from app.models.user import User
 from app.models.user_profile import UserProfile
 from app.repositories.base_repo import BaseRepository
+from app.helpers.id_generator import generate_id
 
 
 class UserRepository(BaseRepository):
@@ -93,12 +94,14 @@ class UserRepository(BaseRepository):
     def create_user(self, user: User, user_profile: UserProfile):
 
         user_data = self.prepare_entity({
+            "id": generate_id(),
             "email": user.email,
             "passwordHash": user.password_hash,
             "isActive": user.is_active,
         })
 
         profile_data = self.prepare_entity({
+            "id": generate_id(),
             "firstName": user_profile.first_name,
             "lastName": user_profile.last_name,
             "avatar": user_profile.avatar,
@@ -109,7 +112,7 @@ class UserRepository(BaseRepository):
                 CREATE (u:User $user)
                 CREATE (p:Profile $profile)
                 CREATE (u)-[:HAS_PROFILE]->(p)
-                RETURN u, p
+                RETURN u
             """, {
                 "user": user_data,
                 "profile": profile_data
@@ -118,7 +121,7 @@ class UserRepository(BaseRepository):
             if not result:
                 return None
 
-            return self._map_user_with_profile(result)
+            return self._map_user(result)
 
         return self.write(query)
 

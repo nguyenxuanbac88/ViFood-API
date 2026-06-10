@@ -6,47 +6,62 @@ from app.models.allergy import Allergy
 from app.repositories.base_repo import BaseRepository
 
 
-class UserProfileRepository():
+class UserProfileRepository(BaseRepository):
     
     def __init__(self, db):
-        self.db = db
+        super().__init__(db)
 
     # =========================
     # BASIC
     # =========================
     
+    def _map_profile(self, record) -> UserProfile:
+        p = record["p"]
+
+        return UserProfile(
+            profile_id=p.get("id"),
+            first_name=p.get("first_name"),
+            last_name=p.get("last_name"),
+            avatar=p.get("avatar"),
+        )
+        
+    def _map_profile_with_relations(self, record):
+        p = record["p"]
+        return {
+            "profile_id": p.get("id"),
+            "first_name": p.get("first_name"),
+            "last_name": p.get("last_name"),
+            "avatar": p.get("avatar"),
+            "health_goals": p.get("health_goals", []),
+            "diseases": p.get("diseases", []),
+            "allergies": p.get("allergies", [])
+        }
+        
     def create_profile(self, user_id: str, profile: UserProfile):
+
+        profile_data = self.prepare_entity({
+            "firstName": profile.first_name,
+            "lastName": profile.last_name,
+            "avatar": profile.avatar,
+        })
         
         def query(tx):
             result = tx.run("""
                 MATCH (u:User {id: $user_id})
-                CREATE (p:Profile {
-                    id: randomUUID(),
-                    first_name: $first_name,
-                    last_name: $last_name,
-                    avatar: $avatar
-                })
-                CREATE (u)-[:HAS_PROFILE]->(p)
+                CREATE (p:Profile $profile)
+                CREATE (u)-[:HAS_FAMILY_MEMBER]->(p)
                 RETURN p
             """, {
                 "user_id": user_id,
-                "first_name": profile.first_name,
-                "last_name": profile.last_name,
-                "avatar": profile.avatar
+                "profile": profile_data
             }).single()
 
             if not result:
                 return None
 
-            p = result["p"]
+            return self._map_profile(result)
 
-            return UserProfile(
-                profile_id=p.get("id"),
-                userId=user_id,
-                first_name=p.get("first_name") or p.get("firstName"),
-                last_name=p.get("last_name") or p.get("lastName"),
-                avatar=p.get("avatar"),
-            )
+        return self.write(query)
 
     def get_user_by_email(self, email: str) -> User | None:
 

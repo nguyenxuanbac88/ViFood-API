@@ -3,7 +3,6 @@ from starlette import status
 
 from app.core.dependencies import get_current_user
 from app.helpers.convert_time import to_vn_time
-from app.repositories.profile_repo import UserProfileRepository
 from app.repositories.user_repo import UserRepository
 from app.schemas.auth import (RegisterRequest, LoginRequest)
 from app.services.v1.auth_service import AuthServiceV1
@@ -18,7 +17,6 @@ router = APIRouter(
 )
 
 auth_service = AuthServiceV1(neo4j_db)
-profile_repo = UserProfileRepository(db)
 user_repo = UserRepository(neo4j_db)
 
 
