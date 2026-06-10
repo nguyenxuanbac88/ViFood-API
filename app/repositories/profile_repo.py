@@ -1,16 +1,70 @@
+from app.models.user import User
 from app.models.user_profile import UserProfile
 from app.models.health_goal import HealthGoal
 from app.models.disease import Disease
 from app.models.allergy import Allergy
+from app.repositories.base_repo import BaseRepository
 
 
-class UserProfileRepository:
+class UserProfileRepository():
+    
     def __init__(self, db):
         self.db = db
 
     # =========================
     # BASIC
     # =========================
+    
+    def create_profile(self, user_id: str, profile: UserProfile):
+        
+        def query(tx):
+            result = tx.run("""
+                MATCH (u:User {id: $user_id})
+                CREATE (p:Profile {
+                    id: randomUUID(),
+                    first_name: $first_name,
+                    last_name: $last_name,
+                    avatar: $avatar
+                })
+                CREATE (u)-[:HAS_PROFILE]->(p)
+                RETURN p
+            """, {
+                "user_id": user_id,
+                "first_name": profile.first_name,
+                "last_name": profile.last_name,
+                "avatar": profile.avatar
+            }).single()
+
+            if not result:
+                return None
+
+            p = result["p"]
+
+            return UserProfile(
+                profile_id=p.get("id"),
+                userId=user_id,
+                first_name=p.get("first_name") or p.get("firstName"),
+                last_name=p.get("last_name") or p.get("lastName"),
+                avatar=p.get("avatar"),
+            )
+
+    def get_user_by_email(self, email: str) -> User | None:
+
+        def query(tx):
+            result = tx.run("""
+                MATCH (u:User)
+                WHERE u.email = $email
+                RETURN u
+                LIMIT 1
+            """, {"email": email}).single()
+
+            if not result:
+                return None
+
+            return self._map_user(result)
+
+        return self.read(query)
+    
 
     def get_all_user_profiles(self) -> list[UserProfile]:
         return self.db.user_profiles

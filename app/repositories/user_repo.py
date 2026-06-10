@@ -1,71 +1,97 @@
 from app.models.user import User
 from app.models.user_profile import UserProfile
 from app.repositories.base_repo import BaseRepository
-from app.helpers.convert_time import to_iso
 
 
 class UserRepository(BaseRepository):
 
     def __init__(self, db):
         super().__init__(db)
+        
+    def _map_user(self, record) -> User:
+        u = record["u"]
+        return User(
+            id=u.get("id"),
+            email=u.get("email"),
+            password_hash=u.get("passwordHash"),
+            is_active=u.get("isActive"),
+            created_at=u.get("createdAt"),
+            updated_at=u.get("updatedAt"),
+        )
 
-    def get_user_by_email(self, email: str) -> User | None:
-        query = """
-        MATCH (u:User)
-        WHERE u.email = $email
-        RETURN u
-        LIMIT 1
-        """
-        with self.driver.session(database=self.database) as session:
-            result = session.run(query, email=email)
-            record = result.single()
+    def _map_user_with_profile(self, record):
+        u = record["u"]
+        p = record["p"]
 
-            if not record:
+        user_data = {
+            "user_id": u.get("id"),
+            "email": u.get("email"),
+            "is_active": u.get("isActive"),
+            "created_at": u.get("createdAt"),
+            "updated_at": u.get("updatedAt"),
+        }
+
+        profile_data = None
+        if p:
+            profile_data = {
+                "profile_id": p.get("id"),
+                "first_name": p.get("firstName"),
+                "last_name": p.get("lastName"),
+                "avatar": p.get("avatar"),
+            }
+
+        return {
+            "user": user_data,
+            "profile": profile_data
+        }
+
+    def get_user_by_email(self, email: str):
+
+        def query(tx):
+            result = tx.run("""
+                MATCH (u:User)
+                WHERE u.email = $email
+                RETURN u
+                LIMIT 1
+            """, {"email": email}).single()
+
+            if not result:
                 return None
 
-            node = record["u"]
+            return self._map_user(result)
 
-            return User(
-                id=node.get("id"),
-                email=node.get("email"),
-                password_hash=node.get("passwordHash")
-            )
-
-    def get_all_users(self):
-
-        query = """
-        MATCH (u:User)
-        RETURN u
-        """
-
-        with self.driver.session(database=self.database) as session:
-            result = session.run(query)
-
-            return [
-                dict(record["u"])
-                for record in result
-            ]
+        return self.read(query)
 
     def get_user_by_id(self, user_id: str):
 
-            query = """
-            MATCH (u:User)
-            WHERE u.id = $id
-            RETURN u
-            LIMIT 1
-            """
+            def query(tx):
+                result = tx.run("""
+                    MATCH (u:User {id: $id})
+                    RETURN u
+                    LIMIT 1
+                """, {"id": user_id}).single()
 
-            with self.driver.session(database=self.database) as session:
-                result = session.run(
-                    query,
-                    id=user_id
-                )
+                if not result:
+                    return None
 
-                record = result.single()
+                return dict(result["u"])
 
-                return dict(record["u"]) if record else None
+            return self.read(query)
+
+    def get_all_users(self):
+
+        def query(tx):
+            result = tx.run("""
+                MATCH (u:User)
+                RETURN u
+            """)
+
+            return [dict(r["u"]) for r in result]
+
+        return self.read(query)
 
     def create_user(self, user: User, user_profile: UserProfile):
+
         user_data = self.prepare_entity({
             "email": user.email,
             "passwordHash": user.password_hash,
@@ -77,89 +103,49 @@ class UserRepository(BaseRepository):
             "lastName": user_profile.last_name,
             "avatar": user_profile.avatar,
         })
-        
-        query = """
-        CREATE (u:User)
-        SET u = $user
 
-        CREATE (p:Profile)
-        SET p = $profile
+        def query(tx):
+            result = tx.run("""
+                CREATE (u:User $user)
+                CREATE (p:Profile $profile)
+                CREATE (u)-[:HAS_PROFILE]->(p)
+                RETURN u, p
+            """, {
+                "user": user_data,
+                "profile": profile_data
+            }).single()
 
-        CREATE (u)-[:HAS_PROFILE]->(p)
-
-        RETURN u, p
-        """
-
-        with self.driver.session(database=self.database) as session:
-            result = session.run(
-                query,
-                user=user_data,
-                profile=profile_data
-            )
-
-            record = result.single()
-            if not record:
+            if not result:
                 return None
 
-            u = record["u"]
+            return self._map_user_with_profile(result)
 
-            return User(
-                id=u["id"],
-                email=u["email"],
-                password_hash=u.get("passwordHash"),
-                is_active=u.get("isActive"),
-                created_at=u.get("createdAt"),
-                updated_at=u.get("updatedAt"),
-            )
+        return self.write(query)
 
     def count_users(self):
 
-        query = """
-        MATCH (u:User)
-        RETURN count(u) AS total
-        """
+            def query(tx):
+                result = tx.run("""
+                    MATCH (u:User)
+                    RETURN count(u) AS total
+                """).single()
 
-        with self.driver.session(database=self.database) as session:
-            result = session.run(query)
+                return result["total"]
 
-            return result.single()["total"]
-        
+            return self.read(query)
+
     def get_current_user(self, user_id: str):
-        query = """
-        MATCH (u:User {id: $user_id})
-        OPTIONAL MATCH (u)-[:HAS_PROFILE]->(p:Profile)
-        RETURN u, p
-        """
 
-        with self.driver.session(database=self.database) as session:
-            result = session.run(query, user_id=user_id)
-            record = result.single()
+        def query(tx):
+            result = tx.run("""
+                MATCH (u:User {id: $user_id})
+                OPTIONAL MATCH (u)-[:HAS_PROFILE]->(p:Profile)
+                RETURN u, p
+            """, {"user_id": user_id}).single()
 
-            if not record:
+            if not result:
                 return None
 
-            u = record["u"]
-            p = record["p"]
+            return self._map_user_with_profile(result)
 
-            user_data = {
-                "user_id": u.get("id"),
-                "email": u.get("email"),
-                "is_active": u.get("is_active") if u.get("is_active") is not None else u.get("isActive"),
-                "created_at": u.get("created_at") or u.get("createdAt"),
-                "updated_at": u.get("updated_at") or u.get("updatedAt"),
-            }
-
-            profile_data = None
-
-            if p:
-                profile_data = {
-                    "profile_id": p.get("id"),
-                    "first_name": p.get("first_name") or p.get("firstName"),
-                    "last_name": p.get("last_name") or p.get("lastName"),
-                    "avatar": p.get("avatar"),
-                }
-
-            return {
-                "user": user_data,
-                "profile": profile_data
-            }
+        return self.read(query)
