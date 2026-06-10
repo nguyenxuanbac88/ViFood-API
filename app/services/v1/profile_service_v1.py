@@ -32,20 +32,6 @@ class UserProfileServiceV1:
     # =========================
     # PROFILE
     # =========================
-
-    def get_user_profile(
-        self,
-        current_user_id: int,
-    ) -> UserProfile:
-
-        profile = self.profile_repo.get_user_profile_by_user_id(
-            current_user_id
-        )
-
-        if not profile:
-            raise ValueError("UserProfile not found")
-
-        
         
     def get_family_members(
         self,
@@ -92,332 +78,344 @@ class UserProfileServiceV1:
         )
 
         return created_profile
-
-    def update_user_profile(
-        self,
-        current_user_id: int,
-        target_profile_id: int,
-        payload: UpdateProfileRequest
-    ) -> UserProfile:
-
-        self._validate_profile_access(
+    
+    def get_profile_by_profile_id(self, current_user_id: str, profile_id: str) -> UserProfile:
+        
+        profile = self.profile_repo.get_profile_by_profile_id(
             current_user_id,
-            target_profile_id
-        )
-
-        profile = self.profile_repo.get_user_profile_by_id(target_profile_id)
-
-        if not profile:
-            raise ValueError("UserProfile not found")
-
-        updated_first_name = (
-            payload.first_name.strip()
-            if payload.first_name is not None
-            else profile.first_name
-        )
-
-        updated_last_name = (
-            payload.last_name.strip()
-            if payload.last_name is not None
-            else profile.last_name
-        )
-
-        updated_avatar = (
-            payload.avatar
-            if payload.avatar is not None
-            else profile.avatar
-        )
-
-        if payload.first_name is not None and not updated_first_name:
-            raise ValueError("First name cannot be empty")
-
-        if payload.last_name is not None and not updated_last_name:
-            raise ValueError("Last name cannot be empty")
-
-        return self.profile_repo.update_user_profile(
-            profile_id=target_profile_id,
-            first_name=updated_first_name,
-            last_name=updated_last_name,
-            avatar=updated_avatar
+            profile_id
         )
         
-    def delete_user_profile(
-        self,
-        current_user_id: int,
-        target_profile_id: int
-    ) -> bool:
-
-        profile = self.profile_repo.get_user_profile_by_id(
-            target_profile_id
-        )
-
         if not profile:
-            raise ValueError("UserProfile not found")
+            raise ValueError("Profile not found")
 
-        # Chỉ được xóa family member của mình
-        if profile.parent_profile_id is None:
-            raise PermissionError(
-                "You can only delete family members"
-            )
+        return profile
 
-        parent = self.profile_repo.get_user_profile_by_id(
-            profile.parent_profile_id
-        )
+    # def update_user_profile(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int,
+    #     payload: UpdateProfileRequest
+    # ) -> UserProfile:
 
-        if not parent:
-            raise ValueError("Parent profile not found")
+    #     self._validate_profile_access(
+    #         current_user_id,
+    #         target_profile_id
+    #     )
 
-        if parent.userId != current_user_id:
-            raise PermissionError(
-                "You can only delete your own family members"
-            )
+    #     profile = self.profile_repo.get_user_profile_by_id(target_profile_id)
 
-        return self.profile_repo.delete_user_profile(
-            target_profile_id
-        )
+    #     if not profile:
+    #         raise ValueError("UserProfile not found")
+
+    #     updated_first_name = (
+    #         payload.first_name.strip()
+    #         if payload.first_name is not None
+    #         else profile.first_name
+    #     )
+
+    #     updated_last_name = (
+    #         payload.last_name.strip()
+    #         if payload.last_name is not None
+    #         else profile.last_name
+    #     )
+
+    #     updated_avatar = (
+    #         payload.avatar
+    #         if payload.avatar is not None
+    #         else profile.avatar
+    #     )
+
+    #     if payload.first_name is not None and not updated_first_name:
+    #         raise ValueError("First name cannot be empty")
+
+    #     if payload.last_name is not None and not updated_last_name:
+    #         raise ValueError("Last name cannot be empty")
+
+    #     return self.profile_repo.update_user_profile(
+    #         profile_id=target_profile_id,
+    #         first_name=updated_first_name,
+    #         last_name=updated_last_name,
+    #         avatar=updated_avatar
+    #     )
         
-    # =========================
-    # HEALTH GOALS
-    # =========================
+    # def delete_user_profile(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int
+    # ) -> bool:
 
-    def get_health_goals(
-        self,
-        current_user_id: int,
-        target_profile_id: int
-    ) -> list[HealthGoal]:
+    #     profile = self.profile_repo.get_user_profile_by_id(
+    #         target_profile_id
+    #     )
 
-        profile = self.get_user_profile(
-            current_user_id,
-            target_profile_id
-        )
+    #     if not profile:
+    #         raise ValueError("UserProfile not found")
 
-        return profile.health_goals
+    #     # Chỉ được xóa family member của mình
+    #     if profile.parent_profile_id is None:
+    #         raise PermissionError(
+    #             "You can only delete family members"
+    #         )
 
-    def add_health_goal(
-        self,
-        current_user_id: int,
-        target_profile_id: int,
-        health_goal_id: int
-    ) -> UserProfile:
+    #     parent = self.profile_repo.get_user_profile_by_id(
+    #         profile.parent_profile_id
+    #     )
 
-        self._validate_profile_access(
-            current_user_id,
-            target_profile_id
-        )
+    #     if not parent:
+    #         raise ValueError("Parent profile not found")
 
-        goal = health_goal_service.get_health_goal_by_id(
-            health_goal_id
-        )
+    #     if parent.userId != current_user_id:
+    #         raise PermissionError(
+    #             "You can only delete your own family members"
+    #         )
 
-        if not goal:
-            raise ValueError("Health goal not found")
+    #     return self.profile_repo.delete_user_profile(
+    #         target_profile_id
+    #     )
+        
+    # # =========================
+    # # HEALTH GOALS
+    # # =========================
 
-        return self.profile_repo.add_health_goal(
-            target_profile_id,
-            goal
-        )
+    # def get_health_goals(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int
+    # ) -> list[HealthGoal]:
 
-    def delete_health_goal(
-        self,
-        current_user_id: int,
-        target_profile_id: int,
-        health_goal_id: int
-    ) -> UserProfile:
+    #     profile = self.get_user_profile(
+    #         current_user_id,
+    #         target_profile_id
+    #     )
 
-        self._validate_profile_access(
-            current_user_id,
-            target_profile_id
-        )
+    #     return profile.health_goals
 
-        goal = health_goal_service.get_health_goal_by_id(
-            health_goal_id
-        )
+    # def add_health_goal(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int,
+    #     health_goal_id: int
+    # ) -> UserProfile:
 
-        if not goal:
-            raise ValueError("Health goal not found")
+    #     self._validate_profile_access(
+    #         current_user_id,
+    #         target_profile_id
+    #     )
 
-        return self.profile_repo.delete_health_goal(
-            target_profile_id,
-            health_goal_id
-        )
+    #     goal = health_goal_service.get_health_goal_by_id(
+    #         health_goal_id
+    #     )
 
-    # =========================
-    # DISEASES
-    # =========================
+    #     if not goal:
+    #         raise ValueError("Health goal not found")
 
-    def get_diseases(
-        self,
-        current_user_id: int,
-        target_profile_id: int
-    ) -> list[Disease]:
+    #     return self.profile_repo.add_health_goal(
+    #         target_profile_id,
+    #         goal
+    #     )
 
-        profile = self.get_user_profile(
-            current_user_id,
-            target_profile_id
-        )
+    # def delete_health_goal(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int,
+    #     health_goal_id: int
+    # ) -> UserProfile:
 
-        return profile.diseases
+    #     self._validate_profile_access(
+    #         current_user_id,
+    #         target_profile_id
+    #     )
 
-    def add_disease(
-        self,
-        current_user_id: int,
-        target_profile_id: int,
-        disease_id: int
-    ) -> UserProfile:
+    #     goal = health_goal_service.get_health_goal_by_id(
+    #         health_goal_id
+    #     )
 
-        self._validate_profile_access(
-            current_user_id,
-            target_profile_id
-        )
+    #     if not goal:
+    #         raise ValueError("Health goal not found")
 
-        disease = disease_service.get_disease_by_id(
-            disease_id
-        )
+    #     return self.profile_repo.delete_health_goal(
+    #         target_profile_id,
+    #         health_goal_id
+    #     )
 
-        if not disease:
-            raise ValueError("Disease not found")
+    # # =========================
+    # # DISEASES
+    # # =========================
 
-        return self.profile_repo.add_disease(
-            target_profile_id,
-            disease
-        )
+    # def get_diseases(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int
+    # ) -> list[Disease]:
 
-    def delete_disease(
-        self,
-        current_user_id: int,
-        target_profile_id: int,
-        disease_id: int
-    ) -> UserProfile:
+    #     profile = self.get_user_profile(
+    #         current_user_id,
+    #         target_profile_id
+    #     )
 
-        self._validate_profile_access(
-            current_user_id,
-            target_profile_id
-        )
+    #     return profile.diseases
 
-        disease = disease_service.get_disease_by_id(
-            disease_id
-        )
+    # def add_disease(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int,
+    #     disease_id: int
+    # ) -> UserProfile:
 
-        if not disease:
-            raise ValueError("Disease not found")
+    #     self._validate_profile_access(
+    #         current_user_id,
+    #         target_profile_id
+    #     )
 
-        return self.profile_repo.delete_disease(
-            target_profile_id,
-            disease_id
-        )
+    #     disease = disease_service.get_disease_by_id(
+    #         disease_id
+    #     )
 
-    # =========================
-    # ALLERGIES
-    # =========================
+    #     if not disease:
+    #         raise ValueError("Disease not found")
 
-    def get_allergies(
-        self,
-        current_user_id: int,
-        target_profile_id: int
-    ) -> list[Allergy]:
+    #     return self.profile_repo.add_disease(
+    #         target_profile_id,
+    #         disease
+    #     )
 
-        profile = self.get_user_profile(
-            current_user_id,
-            target_profile_id
-        )
+    # def delete_disease(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int,
+    #     disease_id: int
+    # ) -> UserProfile:
 
-        return profile.allergies
+    #     self._validate_profile_access(
+    #         current_user_id,
+    #         target_profile_id
+    #     )
 
-    def add_allergy(
-        self,
-        current_user_id: int,
-        target_profile_id: int,
-        allergy_id: int
-    ) -> UserProfile:
+    #     disease = disease_service.get_disease_by_id(
+    #         disease_id
+    #     )
 
-        self._validate_profile_access(
-            current_user_id,
-            target_profile_id
-        )
+    #     if not disease:
+    #         raise ValueError("Disease not found")
 
-        allergy = allergy_service.get_allergy_by_id(
-            allergy_id
-        )
+    #     return self.profile_repo.delete_disease(
+    #         target_profile_id,
+    #         disease_id
+    #     )
 
-        if not allergy:
-            raise ValueError("Allergy not found")
+    # # =========================
+    # # ALLERGIES
+    # # =========================
 
-        return self.profile_repo.add_allergy(
-            target_profile_id,
-            allergy
-        )
+    # def get_allergies(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int
+    # ) -> list[Allergy]:
 
-    def delete_allergy(
-        self,
-        current_user_id: int,
-        target_profile_id: int,
-        allergy_id: int
-    ) -> UserProfile:
+    #     profile = self.get_user_profile(
+    #         current_user_id,
+    #         target_profile_id
+    #     )
 
-        self._validate_profile_access(
-            current_user_id,
-            target_profile_id
-        )
+    #     return profile.allergies
 
-        allergy = allergy_service.get_allergy_by_id(
-            allergy_id
-        )
+    # def add_allergy(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int,
+    #     allergy_id: int
+    # ) -> UserProfile:
 
-        if not allergy:
-            raise ValueError("Allergy not found")
+    #     self._validate_profile_access(
+    #         current_user_id,
+    #         target_profile_id
+    #     )
 
-        return self.profile_repo.delete_allergy(
-            target_profile_id,
-            allergy_id
-        )
+    #     allergy = allergy_service.get_allergy_by_id(
+    #         allergy_id
+    #     )
 
-    # =========================
-    # ACCESS CONTROL
-    # =========================
+    #     if not allergy:
+    #         raise ValueError("Allergy not found")
 
-    def can_access_profile(
-        self,
-        current_user_id: int,
-        target_profile_id: int
-    ) -> bool:
+    #     return self.profile_repo.add_allergy(
+    #         target_profile_id,
+    #         allergy
+    #     )
 
-        profile = self.profile_repo.get_user_profile_by_id(
-            target_profile_id
-        )
+    # def delete_allergy(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int,
+    #     allergy_id: int
+    # ) -> UserProfile:
 
-        if not profile:
-            return False
+    #     self._validate_profile_access(
+    #         current_user_id,
+    #         target_profile_id
+    #     )
 
-        # owner
-        if profile.userId == current_user_id:
-            return True
+    #     allergy = allergy_service.get_allergy_by_id(
+    #         allergy_id
+    #     )
 
-        # parent
-        if profile.parent_profile_id:
-            parent = self.profile_repo.get_user_profile_by_id(
-                profile.parent_profile_id
-            )
+    #     if not allergy:
+    #         raise ValueError("Allergy not found")
 
-            if parent and parent.userId == current_user_id:
-                return True
+    #     return self.profile_repo.delete_allergy(
+    #         target_profile_id,
+    #         allergy_id
+    #     )
 
-        # family
-        if any(
-            member.userId == current_user_id
-            for member in profile.family_members
-        ):
-            return True
+    # # =========================
+    # # ACCESS CONTROL
+    # # =========================
 
-        return False
+    # def can_access_profile(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int
+    # ) -> bool:
 
-    def _validate_profile_access(
-        self,
-        current_user_id: int,
-        target_profile_id: int
-    ) -> None:
+    #     profile = self.profile_repo.get_user_profile_by_id(
+    #         target_profile_id
+    #     )
 
-        if not self.can_access_profile(
-            current_user_id,
-            target_profile_id
-        ):
-            raise PermissionError("Access denied")
+    #     if not profile:
+    #         return False
+
+    #     # owner
+    #     if profile.userId == current_user_id:
+    #         return True
+
+    #     # parent
+    #     if profile.parent_profile_id:
+    #         parent = self.profile_repo.get_user_profile_by_id(
+    #             profile.parent_profile_id
+    #         )
+
+    #         if parent and parent.userId == current_user_id:
+    #             return True
+
+    #     # family
+    #     if any(
+    #         member.userId == current_user_id
+    #         for member in profile.family_members
+    #     ):
+    #         return True
+
+    #     return False
+
+    # def _validate_profile_access(
+    #     self,
+    #     current_user_id: int,
+    #     target_profile_id: int
+    # ) -> None:
+
+    #     if not self.can_access_profile(
+    #         current_user_id,
+    #         target_profile_id
+    #     ):
+    #         raise PermissionError("Access denied")

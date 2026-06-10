@@ -90,6 +90,28 @@ class UserProfileRepository(BaseRepository):
             )
 
         return self.read(query)
+    
+    def get_profile_by_profile_id(self, user_id: str, profile_id: str) -> UserProfile:
+    
+        def query(tx):
+            result = tx.run("""
+                MATCH (u:User {id: $user_id})
+                MATCH (u)-[:HAS_PROFILE|HAS_FAMILY_MEMBER]->(p:Profile {id: $profile_id})
+                RETURN p
+                LIMIT 1
+            """, {
+                "user_id": user_id,
+                "profile_id": profile_id
+            })
+
+            record = result.single()
+
+            if not record:
+                return None
+
+            return self._map_profile(record)
+
+        return self.read(query)
 
     # def update_user_profile(
     #     self,
@@ -354,29 +376,6 @@ class UserProfileRepository(BaseRepository):
             return [self._map_profile(r) for r in result]
 
         return self.read(query)
-
-    def add_family_member(
-        self,
-        parent_profile_id: int,
-        member: UserProfile
-    ) -> UserProfile | None:
-
-        parent = self.get_user_profile_by_id(parent_profile_id)
-
-        if parent is None:
-            return None
-
-        exists = any(
-            family_member.profile_id == member.profile_id
-            for family_member in parent.family_members
-        )
-
-        if exists:
-            return parent
-
-        parent.family_members.append(member)
-
-        return parent.family_members
 
     def remove_family_member(
         self,

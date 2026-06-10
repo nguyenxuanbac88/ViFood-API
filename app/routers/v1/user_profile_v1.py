@@ -33,54 +33,6 @@ profile_repo = UserProfileRepository(neo4j_db)
 # BASIC
 # =========================
 
-# @router.get(
-#     "/",
-#     summary="Lấy toàn bộ hồ sơ người dùng"
-# )
-# async def get_all_user_profiles():
-
-#     profiles = profile_service.get_all_user_profiles()
-
-#     return {
-#         "message": "Get all user profiles success",
-#         "data": profiles
-#     }
-
-
-# @router.get(
-#     "/{profile_id:int}",
-#     summary="Lấy thông tin hồ sơ người dùng"
-# )
-# async def get_user_profile(
-#     profile_id: int,
-#     current_user=Depends(get_current_user)
-# ):
-
-#     try:
-#         profile = profile_service.get_user_profile(
-#             current_user_id=current_user["user_id"],
-#             target_profile_id=profile_id
-#         )
-
-#         return {
-#             "message": "Get user profile success",
-#             "data": profile
-#         }
-
-#     except ValueError as e:
-
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail=str(e)
-#         )
-
-#     except PermissionError as e:
-
-#         raise HTTPException(
-#             status_code=status.HTTP_403_FORBIDDEN,
-#             detail=str(e)
-#         )
-        
     
 @router.get(
     "/family-members",
@@ -98,6 +50,41 @@ async def get_family_members(
         return {
             "message": "Get family members success",
             "data": family_members
+        }
+
+    except PermissionError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(e)
+        )
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+
+
+@router.get(
+    "/family-members/{profile_id}",
+    summary="Lấy chi tiết thành viên gia đình"
+)
+async def get_family_member_detail(
+    profile_id: str,
+    current_user=Depends(get_current_user)
+):
+
+    try:
+        profile = profile_service.get_profile_by_profile_id(
+            current_user_id=current_user["user_id"],
+            profile_id=profile_id
+        )
+
+        return {
+            "message": "Get profile success",
+            "data": profile
         }
 
     except PermissionError as e:
