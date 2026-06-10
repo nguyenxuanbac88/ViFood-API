@@ -3,7 +3,6 @@ from fastapi import HTTPException, status
 from app.models.user import User
 from app.models.user_profile import UserProfile
 from app.repositories.user_repo import UserRepository
-from app.repositories.profile_repo import UserProfileRepository
 from app.core.security import (hash_password, create_access_token, verify_password, verify_token, create_refresh_token)
 
 
