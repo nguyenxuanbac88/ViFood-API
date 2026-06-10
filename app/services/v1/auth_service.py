@@ -11,7 +11,6 @@ class AuthServiceV1:
 
     def __init__(self, db):
         self.user_repo = UserRepository(db)
-        self.profile_repo = UserProfileRepository(db)
 
     def register_user(self, data):
         existing_user = self.user_repo.get_user_by_email(data.email)

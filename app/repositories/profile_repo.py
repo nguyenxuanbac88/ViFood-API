@@ -4,6 +4,7 @@ from app.models.health_goal import HealthGoal
 from app.models.disease import Disease
 from app.models.allergy import Allergy
 from app.repositories.base_repo import BaseRepository
+from app.helpers.convert_time import to_vn_time
 
 
 class UserProfileRepository(BaseRepository):
@@ -20,17 +21,19 @@ class UserProfileRepository(BaseRepository):
 
         return UserProfile(
             profile_id=p.get("id"),
-            first_name=p.get("first_name"),
-            last_name=p.get("last_name"),
+            first_name=p.get("firstName"),
+            last_name=p.get("lastName"),
             avatar=p.get("avatar"),
+            created_at=to_vn_time(p.get("createdAt")),
+            updated_at=to_vn_time(p.get("updatedAt")),
         )
         
     def _map_profile_with_relations(self, record):
         p = record["p"]
         return {
             "profile_id": p.get("id"),
-            "first_name": p.get("first_name"),
-            "last_name": p.get("last_name"),
+            "first_name": p.get("firstName"),
+            "last_name": p.get("lastName"),
             "avatar": p.get("avatar"),
             "health_goals": p.get("health_goals", []),
             "diseases": p.get("diseases", []),
@@ -62,58 +65,37 @@ class UserProfileRepository(BaseRepository):
             return self._map_profile(result)
 
         return self.write(query)
-
-    def get_user_by_email(self, email: str) -> User | None:
-
-        def query(tx):
-            result = tx.run("""
-                MATCH (u:User)
-                WHERE u.email = $email
-                RETURN u
-                LIMIT 1
-            """, {"email": email}).single()
-
-            if not result:
-                return None
-
-            return self._map_user(result)
-
-        return self.read(query)
     
-
     def get_all_user_profiles(self) -> list[UserProfile]:
         return self.db.user_profiles
 
     def count_user_profiles(self) -> int:
         return len(self.db.user_profiles)
 
-    def get_user_profile_by_id(
-        self,
-        profile_id: int
-    ) -> UserProfile | None:
+    def get_user_profile_by_user_id(self, profile_id: str) -> UserProfile | None:
 
-        return next(
-            (
-                profile
-                for profile in self.db.user_profiles
-                if profile.profile_id == profile_id
-            ),
-            None
-        )
-        
-    def get_user_profile_by_user_id(
-        self,
-        user_id: int
-    ) -> UserProfile | None:
+        def query(tx):
+            result = tx.run("""
+                MATCH (p:Profile {id: $profile_id})
+                RETURN p
+                LIMIT 1
+            """, {
+                "profile_id": profile_id
+            }).single()
 
-        return next(
-            (
-                profile
-                for profile in self.db.user_profiles
-                if profile.userId == user_id
-            ),
-            None
-        )
+            if not result:
+                return None
+
+            p = result["p"]
+
+            return UserProfile(
+                profile_id=p.get("id"),
+                first_name=p.get("firstName"),
+                last_name=p.get("lastName"),
+                avatar=p.get("avatar"),
+            )
+
+        return self.read(query)
 
     def create_user_profile(
         self,
