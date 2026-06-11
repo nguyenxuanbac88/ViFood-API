@@ -2,7 +2,7 @@
 from app.services.v1.health_goal_service_v1 import HealthGoalServiceV1
 from app.core.database import neo4j_db
 from app.schemas.profile_schema import HealthGoalRequest
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 
 router = APIRouter(
     prefix="/health-goals",
@@ -49,7 +49,7 @@ def list_health_goals():
 
         return {
             "message": "Create Health Goal success",
-            "data": health_goal
+            "data": health_goal,
         }
 
     except PermissionError as e:
@@ -85,14 +85,12 @@ def get_health_goal_by_id(id: str):
     - v0 không truy vấn database thật
     """
     try:
-        health_goal = health_goal_service.get_health_goal_by_id(
-          id
-        )
+                health_goal = health_goal_service.get_health_goal_by_id(id)
 
-        return {
-            "message": "Create Health Goal success",
-            "data": health_goal
-        }
+                return {
+                        "message": "Create Health Goal success",
+                        "data": health_goal,
+                }
 
     except PermissionError as e:
 
@@ -126,14 +124,12 @@ def create_health_goal(payload: HealthGoalRequest):
     - Dữ liệu được thêm vào cơ sở dữ liệu thật
     """
     try:
-        health_goal = health_goal_service.create_health_goal(
-          payload.name
-        )
+                health_goal = health_goal_service.create_health_goal(payload.name)
 
-        return {
-            "message": "Create Health Goal success",
-            "data": health_goal
-        }
+                return {
+                        "message": "Create Health Goal success",
+                        "data": health_goal,
+                }
 
     except PermissionError as e:
 
@@ -170,13 +166,13 @@ def update_health_goal(id: str, payload: HealthGoalRequest):
     """
     try:
         health_goal = health_goal_service.update_health_goal(
-          health_goal_id=id,
-          name=payload.name 
-          )
+            health_goal_id=id,
+            name=payload.name,
+        )
 
         return {
             "message": "Update Health Goal success",
-            "data": health_goal
+            "data": health_goal,
         }
 
     except PermissionError as e:
@@ -187,11 +183,10 @@ def update_health_goal(id: str, payload: HealthGoalRequest):
         )
 
     except ValueError as e:
-      
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=str(e)
-            )
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(e),
+        )
 
 
 @router.delete("/{id}")
@@ -211,13 +206,9 @@ def delete_health_goal(id: str):
     - v0 chỉ xóa dữ liệu trong bộ nhớ tạm
     """
     try:
-        health_goal = health_goal_service.delete_health_goal(
-          health_goal_id=id
-          )
+                health_goal_service.delete_health_goal(health_goal_id=id)
 
-        return {
-            "message": "Delete Health Goal success",
-        }
+                return {"message": "Delete Health Goal success"}
 
     except PermissionError as e:
 
@@ -227,8 +218,7 @@ def delete_health_goal(id: str):
         )
 
     except ValueError as e:
-      
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=str(e)
-            )
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e),
+        )

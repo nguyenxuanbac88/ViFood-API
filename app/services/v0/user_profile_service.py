@@ -1,9 +1,5 @@
 from app.models.user_profile import UserProfile
 
-from app.models.health_goal import HealthGoal
-from app.models.disease import Disease
-from app.models.allergy import Allergy
-
 # from app.services.v0.health_goal_service import HealthGoalServiceV0
 from app.services.v0.disease_service import DiseaseServiceV0
 from app.services.v0.allergy_service import AllergyServiceV0

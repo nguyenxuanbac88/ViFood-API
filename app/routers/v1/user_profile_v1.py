@@ -177,14 +177,12 @@ async def delete_user_profile(
 ):
 
     try:
-        profile = profile_service.delete_family_meber(
+        profile_service.delete_family_meber(
             current_user_id=current_user["user_id"],
-            target_profile_id=profile_id
+            target_profile_id=profile_id,
         )
 
-        return {
-            "message": "Delete user profile success"
-        }
+        return {"message": "Delete user profile success"}
 
     except PermissionError as e:
 
