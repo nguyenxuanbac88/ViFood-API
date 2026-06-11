@@ -129,6 +129,41 @@ async def create_user_profile(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=str(e)
         )
+        
+@router.patch(
+    "/",
+    summary="Chỉnh sửa hồ sơ người dùng"
+)
+async def update_current_user_profile(
+    payload: UpdateProfileRequest,
+    profile_id: str,
+    current_user=Depends(get_current_user),
+):
+    try:
+        profile = profile_service.update_current_user_profile(
+            current_user_id=current_user["user_id"],
+            profile_id=profile_id,
+            profile=payload
+        )
+
+        return {
+            "message": "Update user profile success",
+            "data": profile
+        }
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+    except PermissionError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(e)
+        )
 
 
 # @router.patch(

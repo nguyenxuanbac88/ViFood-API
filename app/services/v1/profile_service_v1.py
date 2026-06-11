@@ -7,6 +7,7 @@ from app.services.v0.allergy_service import AllergyServiceV0
 
 from app.repositories.profile_repo import UserProfileRepository
 from app.repositories.user_repo import UserRepository
+from app.schemas.update_profile import UpdateProfileRequest
 
 health_goal_service = HealthGoalServiceV0()
 disease_service = DiseaseServiceV0()
@@ -82,6 +83,19 @@ class UserProfileServiceV1:
         if not profile:
             raise ValueError("Profile not found")
 
+        return profile
+    
+    def update_current_user_profile(self, current_user_id: str, profile_id: str, profile: UpdateProfileRequest) -> UserProfile:
+        
+        profile = self.profile_repo.update_current_user_profile(
+            current_user_id,
+            profile_id,
+            profile
+        )
+        
+        if not profile:
+            raise ValueError("Profile not found")
+        
         return profile
 
     # def update_user_profile(

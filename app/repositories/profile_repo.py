@@ -4,6 +4,7 @@ from app.models.disease import Disease
 from app.models.allergy import Allergy
 from app.repositories.base_repo import BaseRepository
 from app.helpers.convert_time import to_vn_time
+from app.schemas.update_profile import UpdateProfileRequest
 
 
 class UserProfileRepository(BaseRepository):
@@ -74,19 +75,14 @@ class UserProfileRepository(BaseRepository):
                 LIMIT 1
             """, {
                 "profile_id": profile_id
-            }).single()
+            })
 
-            if not result:
+            record = result.single()
+
+            if not record:
                 return None
 
-            p = result["p"]
-
-            return UserProfile(
-                profile_id=p.get("id"),
-                first_name=p.get("firstName"),
-                last_name=p.get("lastName"),
-                avatar=p.get("avatar"),
-            )
+            return self._map_profile(record)
 
         return self.read(query)
     
@@ -111,6 +107,36 @@ class UserProfileRepository(BaseRepository):
             return self._map_profile(record)
 
         return self.read(query)
+    
+    def update_current_user_profile(self, user_id: str, profile_id: str, profile: UpdateProfileRequest) -> UserProfile | None:
+        
+        profile_data = self.prepare_update_entity({
+            "firstName": profile.first_name,
+            "lastName": profile.last_name,
+            "avatar": profile.avatar
+        })
+        
+        def query(tx):
+            result = tx.run("""
+                MATCH (u:User {id: $user_id})-[:HAS_PROFILE|HAS_FAMILY_MEMBER]->(p:Profile {id: $profile_id})
+                
+                SET p += $profile_data
+                    
+                RETURN p
+                LIMIT 1
+                """, {
+                    "user_id": user_id,
+                    "profile_id": profile_id,
+                    "profile_data": profile_data,
+                })
+            record = result.single()
+
+            if not record:
+                return None
+
+            return self._map_profile(record)
+
+        return self.write(query)
 
     # def update_user_profile(
     #     self,
