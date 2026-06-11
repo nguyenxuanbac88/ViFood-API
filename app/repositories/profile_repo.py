@@ -4,6 +4,7 @@ from app.models.disease import Disease
 from app.models.allergy import Allergy
 from app.repositories.base_repo import BaseRepository
 from app.helpers.convert_time import to_vn_time
+
 from app.schemas.update_profile import UpdateProfileRequest
 
 
@@ -154,6 +155,27 @@ class UserProfileRepository(BaseRepository):
             return record["deleted"]
 
         return self.write(query)
+
+    # def update_user_profile(
+    #     self,
+    #     profile_id: int,
+    #     first_name: str,
+    #     last_name: str,
+    #     avatar: str | None = None
+    # ) -> UserProfile | None:
+
+    #     profile = self.get_user_profile_by_id(profile_id)
+
+    #     if profile is None:
+    #         return None
+
+    #     profile.first_name = first_name
+    #     profile.last_name = last_name
+
+    #     if avatar is not None:
+    #         profile.avatar = avatar
+
+    #     return profile
 
     # def delete_user_profile(
     #     self,

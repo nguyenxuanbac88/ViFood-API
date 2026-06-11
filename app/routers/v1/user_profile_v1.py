@@ -129,6 +129,7 @@ async def create_user_profile(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=str(e)
         )
+
         
 @router.patch(
     "/{profile_id}",
