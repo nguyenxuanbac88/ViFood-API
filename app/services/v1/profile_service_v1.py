@@ -55,11 +55,6 @@ class UserProfileServiceV1:
         if not last_name:
             raise ValueError("Last name is required")
 
-        existing_profile = self.profile_repo.get_user_profile_by_user_id(current_user_id)
-
-        if existing_profile:
-            raise ValueError("User already has a profile")
-
         profile = UserProfile(
             first_name=first_name,
             last_name=last_name,
@@ -73,9 +68,9 @@ class UserProfileServiceV1:
 
         return created_profile
     
-    def get_profile_by_profile_id(self, current_user_id: str, profile_id: str) -> UserProfile:
+    def get_accessible_profile(self, current_user_id: str, profile_id: str) -> UserProfile:
         
-        profile = self.profile_repo.get_profile_by_profile_id(
+        profile = self.profile_repo.get_profile_by_user_access(
             current_user_id,
             profile_id
         )
@@ -85,9 +80,18 @@ class UserProfileServiceV1:
 
         return profile
     
-    def update_current_user_profile(self, current_user_id: str, profile_id: str, profile: UpdateProfileRequest) -> UserProfile:
+    def update_user_profile(self, current_user_id: str, profile_id: str, profile: UpdateProfileRequest) -> UserProfile:
         
-        profile = self.profile_repo.update_current_user_profile(
+        first_name = profile.first_name.strip()
+        last_name = profile.last_name.strip()
+
+        if not first_name:
+            raise ValueError("First name is required")
+
+        if not last_name:
+            raise ValueError("Last name is required")
+        
+        profile = self.profile_repo.update_user_profile(
             current_user_id,
             profile_id,
             profile
@@ -97,54 +101,17 @@ class UserProfileServiceV1:
             raise ValueError("Profile not found")
         
         return profile
+    
+    def delete_family_meber(self, current_user_id: str, target_profile_id: str) -> bool:
+        
+        deleted = self.profile_repo.delete_family_member(
+            current_user_id,
+            target_profile_id
+        )
+        if not deleted:
+            raise ValueError("Profile not found")
 
-    # def update_user_profile(
-    #     self,
-    #     current_user_id: int,
-    #     target_profile_id: int,
-    #     payload: UpdateProfileRequest
-    # ) -> UserProfile:
-
-    #     self._validate_profile_access(
-    #         current_user_id,
-    #         target_profile_id
-    #     )
-
-    #     profile = self.profile_repo.get_user_profile_by_id(target_profile_id)
-
-    #     if not profile:
-    #         raise ValueError("UserProfile not found")
-
-    #     updated_first_name = (
-    #         payload.first_name.strip()
-    #         if payload.first_name is not None
-    #         else profile.first_name
-    #     )
-
-    #     updated_last_name = (
-    #         payload.last_name.strip()
-    #         if payload.last_name is not None
-    #         else profile.last_name
-    #     )
-
-    #     updated_avatar = (
-    #         payload.avatar
-    #         if payload.avatar is not None
-    #         else profile.avatar
-    #     )
-
-    #     if payload.first_name is not None and not updated_first_name:
-    #         raise ValueError("First name cannot be empty")
-
-    #     if payload.last_name is not None and not updated_last_name:
-    #         raise ValueError("Last name cannot be empty")
-
-    #     return self.profile_repo.update_user_profile(
-    #         profile_id=target_profile_id,
-    #         first_name=updated_first_name,
-    #         last_name=updated_last_name,
-    #         avatar=updated_avatar
-    #     )
+        return True
         
     # def delete_user_profile(
     #     self,

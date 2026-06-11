@@ -80,49 +80,6 @@ class UserProfileServiceV0:
 
         return profile.family_members
 
-    def create_user_profile(
-        self,
-        current_user_id: int,
-        first_name: str,
-        last_name: str,
-        avatar: str | None = None
-    ) -> UserProfile:
-
-        if not first_name.strip():
-            raise ValueError("First name is required")
-
-        if not last_name.strip():
-            raise ValueError("Last name is required")
-
-        parent_profile = self.profile_repo.get_user_profile_by_user_id(
-            current_user_id
-        )
-
-        if not parent_profile:
-            raise ValueError("Parent profile not found")
-
-        profile = UserProfile(
-            profile_id=self.profile_repo.count_user_profiles() + 1,
-            userId=None,
-            first_name=first_name.strip(),
-            last_name=last_name.strip(),
-            avatar=avatar,
-            health_goals=[],
-            diseases=[],
-            allergies=[],
-            family_members=[],
-            parent_profile_id=parent_profile.profile_id
-        )
-
-        created_profile = self.profile_repo.create_user_profile(
-            profile
-        )
-
-        return self.profile_repo.add_family_member(
-            parent_profile.profile_id,
-            created_profile
-        )
-
     def update_user_profile(
         self,
         current_user_id: int,

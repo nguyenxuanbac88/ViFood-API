@@ -66,15 +66,16 @@ class UserProfileRepository(BaseRepository):
 
         return self.write(query)
 
-    def get_user_profile_by_user_id(self, profile_id: str) -> UserProfile | None:
+    def get_user_profile_by_user_id(self, user_id: str) -> UserProfile | None:
 
         def query(tx):
             result = tx.run("""
-                MATCH (p:Profile {id: $profile_id})
+                MATCH (u:User {id: $user_id})
+                MATCH (u)-[:HAS_PROFILE]->(p:Profile)
                 RETURN p
                 LIMIT 1
             """, {
-                "profile_id": profile_id
+                "user_id": user_id
             })
 
             record = result.single()
@@ -86,7 +87,7 @@ class UserProfileRepository(BaseRepository):
 
         return self.read(query)
     
-    def get_profile_by_profile_id(self, user_id: str, profile_id: str) -> UserProfile:
+    def get_profile_by_user_access(self, user_id: str, profile_id: str) -> UserProfile:
     
         def query(tx):
             result = tx.run("""
@@ -108,7 +109,7 @@ class UserProfileRepository(BaseRepository):
 
         return self.read(query)
     
-    def update_current_user_profile(self, user_id: str, profile_id: str, profile: UpdateProfileRequest) -> UserProfile | None:
+    def update_user_profile(self, user_id: str, profile_id: str, profile: UpdateProfileRequest) -> UserProfile | None:
         
         profile_data = self.prepare_update_entity({
             "firstName": profile.first_name,
@@ -137,27 +138,22 @@ class UserProfileRepository(BaseRepository):
             return self._map_profile(record)
 
         return self.write(query)
+    
+    def delete_family_member(self, user_id: str, profile_id: str) -> bool:
+        def query(tx):
+            result = tx.run("""
+                MATCH (u:User {id: $user_id})-[:HAS_FAMILY_MEMBER]->(p:Profile {id: $profile_id})
+                DETACH DELETE p
+                RETURN count(*) > 0 AS deleted
+                """, {
+                    "user_id": user_id,
+                    "profile_id": profile_id,
+                })
+            record = result.single()
 
-    # def update_user_profile(
-    #     self,
-    #     profile_id: int,
-    #     first_name: str,
-    #     last_name: str,
-    #     avatar: str | None = None
-    # ) -> UserProfile | None:
+            return record["deleted"]
 
-    #     profile = self.get_user_profile_by_id(profile_id)
-
-    #     if profile is None:
-    #         return None
-
-    #     profile.first_name = first_name
-    #     profile.last_name = last_name
-
-    #     if avatar is not None:
-    #         profile.avatar = avatar
-
-    #     return profile
+        return self.write(query)
 
     # def delete_user_profile(
     #     self,
@@ -401,22 +397,3 @@ class UserProfileRepository(BaseRepository):
             return [self._map_profile(r) for r in result]
 
         return self.read(query)
-
-    def remove_family_member(
-        self,
-        parent_profile_id: int,
-        member_profile_id: int
-    ) -> UserProfile | None:
-
-        parent = self.get_user_profile_by_id(parent_profile_id)
-
-        if parent is None:
-            return None
-
-        parent.family_members = [
-            member
-            for member in parent.family_members
-            if member.profile_id != member_profile_id
-        ]
-
-        return parent
