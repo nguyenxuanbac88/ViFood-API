@@ -85,12 +85,12 @@ def get_health_goal_by_id(id: str):
     - v0 không truy vấn database thật
     """
     try:
-      health_goal = health_goal_service.get_health_goal_by_id(id)
+        health_goal = health_goal_service.get_health_goal_by_id(id)
 
-      return {
-              "message": "Create Health Goal success",
-              "data": health_goal,
-      }
+        return {
+                "message": "Create Health Goal success",
+                "data": health_goal,
+        }
 
     except PermissionError as e:
 
@@ -124,12 +124,12 @@ def create_health_goal(payload: HealthGoalRequest):
     - Dữ liệu được thêm vào cơ sở dữ liệu thật
     """
     try:
-      health_goal = health_goal_service.create_health_goal(payload.name)
+        health_goal = health_goal_service.create_health_goal(payload.name)
 
-      return {
-              "message": "Create Health Goal success",
-              "data": health_goal,
-      }
+        return {
+                "message": "Create Health Goal success",
+                "data": health_goal,
+        }
 
     except PermissionError as e:
 
@@ -165,15 +165,15 @@ def update_health_goal(id: str, payload: HealthGoalRequest):
     - v0 chỉ cập nhật dữ liệu mock
     """
     try:
-      health_goal = health_goal_service.update_health_goal(
-          health_goal_id=id,
-          name=payload.name,
-      )
+        health_goal = health_goal_service.update_health_goal(
+            health_goal_id=id,
+            name=payload.name,
+        )
 
-      return {
-          "message": "Update Health Goal success",
-          "data": health_goal,
-      }
+        return {
+            "message": "Update Health Goal success",
+            "data": health_goal,
+        }
 
     except PermissionError as e:
 
@@ -206,9 +206,9 @@ def delete_health_goal(id: str):
     - v0 chỉ xóa dữ liệu trong bộ nhớ tạm
     """
     try:
-      health_goal_service.delete_health_goal(health_goal_id=id)
-      
-      return {"message": "Delete Health Goal success"}
+        health_goal_service.delete_health_goal(health_goal_id=id)
+        
+        return {"message": "Delete Health Goal success"}
 
     except PermissionError as e:
 
