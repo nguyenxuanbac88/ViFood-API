@@ -236,11 +236,11 @@ def seed(db: FakeDB):
     # =========================
     # HEALTH GOALS
     # =========================
-    db.health_goals.extend([
-        HealthGoal(id=1, name="Giảm cân"),
-        HealthGoal(id=2, name="Tăng cơ"),
-        HealthGoal(id=3, name="Duy trì sức khỏe"),
-    ])
+    # db.health_goals.extend([
+    #     HealthGoal(id=1, name="Giảm cân"),
+    #     HealthGoal(id=2, name="Tăng cơ"),
+    #     HealthGoal(id=3, name="Duy trì sức khỏe"),
+    # ])
 
     # =========================
     # NUTRIENTS

@@ -1,7 +1,7 @@
 
 from app.models.user_profile import UserProfile
 
-from app.services.v0.health_goal_service import HealthGoalServiceV0
+# from app.services.v0.health_goal_service import HealthGoalServiceV0
 from app.services.v0.disease_service import DiseaseServiceV0
 from app.services.v0.allergy_service import AllergyServiceV0
 
@@ -9,7 +9,7 @@ from app.repositories.profile_repo import UserProfileRepository
 from app.repositories.user_repo import UserRepository
 from app.schemas.update_profile import UpdateProfileRequest
 
-health_goal_service = HealthGoalServiceV0()
+# health_goal_service = HealthGoalServiceV0()
 disease_service = DiseaseServiceV0()
 allergy_service = AllergyServiceV0()
 
