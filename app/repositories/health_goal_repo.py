@@ -1,6 +1,5 @@
 from app.models.health_goal import HealthGoal
 from app.repositories.base_repo import BaseRepository
-from app.helpers.convert_time import now_iso
 from app.helpers.normalize import normalize_key
 
 
@@ -41,7 +40,9 @@ class HealthGoalRepository(BaseRepository):
         return self.read(_query)
     
     def _find_by_key(self, key: str):
+        
         _key = normalize_key(key)
+        
         def query(tx):
             result = tx.run("""
                 MATCH (h:HealthGoal {key: $key})
