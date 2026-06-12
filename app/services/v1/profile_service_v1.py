@@ -13,6 +13,7 @@ from app.core.database import neo4j_db
 
 # health_goal_service = HealthGoalServiceV0()
 disease_service = DiseaseServiceV1(neo4j_db)
+# health_goal_service = HealthGoalServiceV0()
 allergy_service = AllergyServiceV0()
 
 

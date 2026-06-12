@@ -1,6 +1,7 @@
 
 from app.services.v1.health_goal_service_v1 import HealthGoalServiceV1
 from app.core.database import neo4j_db
+
 from app.schemas.profile_schema import HealthProfileRequest
 from fastapi import APIRouter, HTTPException, status
 
@@ -49,9 +50,7 @@ def list_health_goals():
 
         return {
             "message": "Get Health Goals success",
-            "data": health_goal,
         }
-
     except PermissionError as e:
 
         raise HTTPException(
