@@ -270,46 +270,46 @@ async def add_health_goal(
     except ValueError as e:
 
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail=str(e)
         )
 
 
-# @router.delete(
-#     "/{profile_id}/health-goals/{health_goal_id}",
-#     summary="Xóa mục tiêu sức khỏe"
-# )
-# async def delete_health_goal(
-#     profile_id: int,
-#     health_goal_id: int,
-#     current_user=Depends(get_current_user)
-# ):
+@router.delete(
+    "/{profile_id}/health-goals/{health_goal_id}",
+    summary="Xóa mục tiêu sức khỏe trong hồ sơ"
+)
+async def remove_health_goal(
+    profile_id: str,
+    health_goal_id: str,
+    current_user=Depends(get_current_user)
+):
 
-#     try:
-#         profile = profile_service.delete_health_goal(
-#             current_user_id=current_user["user_id"],
-#             target_profile_id=profile_id,
-#             health_goal_id=health_goal_id
-#         )
+    try:
+        profile = profile_service.remove_health_goal_from_profile(
+            current_user_id=current_user["user_id"],
+            target_profile_id=profile_id,
+            health_goal_id=health_goal_id
+        )
 
-#         return {
-#             "message": "Delete health goal success",
-#             "data": profile
-#         }
+        return {
+            "message": "Delete health goal success",
+            "data": profile
+        }
 
-#     except PermissionError as e:
+    except PermissionError as e:
 
-#         raise HTTPException(
-#             status_code=status.HTTP_403_FORBIDDEN,
-#             detail=str(e)
-#         )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(e)
+        )
 
-#     except ValueError as e:
+    except ValueError as e:
 
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST,
-#             detail=str(e)
-#         )
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
 
 
 # # =========================

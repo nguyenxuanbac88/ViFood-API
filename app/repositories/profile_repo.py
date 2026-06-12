@@ -206,6 +206,30 @@ class UserProfileRepository(BaseRepository):
             return record["success"] if record else False
 
         return self.write(query)
+    
+    def remove_health_goal_from_profile(
+        self,
+        profile_id: str,
+        health_goal_id: str
+    ) -> bool:
+        def query(tx):
+            result = tx.run("""
+                MATCH (p:Profile {id: $profile_id})
+                    -[r:HAS_HEALTH_GOAL]->
+                    (h:HealthGoal {id: $health_goal_id})
+
+                DELETE r
+
+                RETURN COUNT(r) > 0 AS success
+            """, {
+                "profile_id": profile_id,
+                "health_goal_id": health_goal_id
+            })
+
+            record = result.single()
+            return record["success"] if record else False
+
+        return self.write(query)
 
     # def delete_health_goal(
     #     self,

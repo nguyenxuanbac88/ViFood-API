@@ -154,10 +154,40 @@ class UserProfileServiceV1:
         if profile is None:
             raise ValueError("User Profile not found")
 
-        return self.profile_repo.add_health_goal_to_profile(
+        success = self.profile_repo.add_health_goal_to_profile(
             target_profile_id,
             health_goal_id
         )
+        
+        if not success:
+            raise ValueError("Health goal not found")
+        
+        return success
+        
+    def remove_health_goal_from_profile(
+        self,
+        current_user_id: str,
+        target_profile_id: str,
+        health_goal_id: str
+    ) -> bool:
+        
+        profile = self.profile_repo.get_profile_by_user_access(
+            current_user_id,
+            target_profile_id
+        )
+         
+        if profile is None:
+             raise ValueError("User Profile not found")
+         
+        success = self.profile_repo.remove_health_goal_from_profile(
+             target_profile_id,
+             health_goal_id
+         )
+         
+        if not success:
+            raise ValueError("Health goal not found")
+        
+        return success
 
     # def delete_health_goal(
     #     self,
