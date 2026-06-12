@@ -11,13 +11,7 @@ from app.repositories.user_repo import UserRepository
 from app.schemas.update_profile import UpdateProfileRequest
 
 from app.models.health_goal import HealthGoal
-
-from app.core.database import neo4j_db
-
-# health_goal_service = HealthGoalServiceV0()
-disease_service = DiseaseServiceV1(neo4j_db)
-health_goal_service = HealthGoalServiceV1(neo4j_db)
-allergy_service = AllergyServiceV1(neo4j_db)
+from app.models.disease import Disease
 
 
 class UserProfileServiceV1:
@@ -189,94 +183,79 @@ class UserProfileServiceV1:
         
         return success
 
-    # def delete_health_goal(
-    #     self,
-    #     current_user_id: int,
-    #     target_profile_id: int,
-    #     health_goal_id: int
-    # ) -> UserProfile:
-
-    #     self._validate_profile_access(
-    #         current_user_id,
-    #         target_profile_id
-    #     )
-
-    #     goal = health_goal_service.get_health_goal_by_id(
-    #         health_goal_id
-    #     )
-
-    #     if not goal:
-    #         raise ValueError("Health goal not found")
-
-    #     return self.profile_repo.delete_health_goal(
-    #         target_profile_id,
-    #         health_goal_id
-    #     )
-
     # # =========================
     # # DISEASES
     # # =========================
+    
+    def get_diseases_by_profile_id(
+        self,
+        current_user_id: str,
+        target_profile_id: str
+    ) -> list[Disease]:
 
-    # def get_diseases(
-    #     self,
-    #     current_user_id: int,
-    #     target_profile_id: int
-    # ) -> list[Disease]:
+        profile = self.profile_repo.get_profile_by_user_access(
+            current_user_id,
+            target_profile_id
+        )
 
-    #     profile = self.get_user_profile(
-    #         current_user_id,
-    #         target_profile_id
-    #     )
+        if profile is None:
+            raise ValueError("User Profile not found")
 
-    #     return profile.diseases
+        return self.profile_repo.get_diseases_by_profile_id(
+            target_profile_id
+        )
 
-    # def add_disease(
-    #     self,
-    #     current_user_id: int,
-    #     target_profile_id: int,
-    #     disease_id: int
-    # ) -> UserProfile:
 
-    #     self._validate_profile_access(
-    #         current_user_id,
-    #         target_profile_id
-    #     )
+    def add_disease_to_profile(
+        self,
+        current_user_id: str,
+        target_profile_id: str,
+        disease_id: str
+    ) -> bool:
 
-    #     disease = disease_service.get_disease_by_id(
-    #         disease_id
-    #     )
+        profile = self.profile_repo.get_profile_by_user_access(
+            current_user_id,
+            target_profile_id
+        )
 
-    #     if not disease:
-    #         raise ValueError("Disease not found")
+        if profile is None:
+            raise ValueError("User Profile not found")
 
-    #     return self.profile_repo.add_disease(
-    #         target_profile_id,
-    #         disease
-    #     )
+        success = self.profile_repo.add_disease_to_profile(
+            target_profile_id,
+            disease_id
+        )
 
-    # def delete_disease(
-    #     self,
-    #     current_user_id: int,
-    #     target_profile_id: int,
-    #     disease_id: int
-    # ) -> UserProfile:
+        if not success:
+            raise ValueError("Disease not found")
 
-    #     self._validate_profile_access(
-    #         current_user_id,
-    #         target_profile_id
-    #     )
+        return success
 
-    #     disease = disease_service.get_disease_by_id(
-    #         disease_id
-    #     )
 
-    #     if not disease:
-    #         raise ValueError("Disease not found")
+    def remove_disease_from_profile(
+        self,
+        current_user_id: str,
+        target_profile_id: str,
+        disease_id: str
+    ) -> bool:
 
-    #     return self.profile_repo.delete_disease(
-    #         target_profile_id,
-    #         disease_id
-    #     )
+        profile = self.profile_repo.get_profile_by_user_access(
+            current_user_id,
+            target_profile_id
+        )
+
+        if profile is None:
+            raise ValueError("User Profile not found")
+
+        success = self.profile_repo.remove_disease_from_profile(
+            target_profile_id,
+            disease_id
+        )
+
+        if not success:
+            raise ValueError("Disease not found")
+
+        return success
 
     # # =========================
     # # ALLERGIES

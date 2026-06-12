@@ -316,114 +316,113 @@ async def remove_health_goal(
 # # DISEASES
 # # =========================
 
-# @router.get(
-#     "/{profile_id}/diseases",
-#     summary="Lấy danh sách bệnh"
-# )
-# async def get_diseases(
-#     profile_id: int,
-#     current_user=Depends(get_current_user)
-# ):
+@router.get(
+    "/{profile_id}/diseases",
+    summary="Lấy danh sách bệnh nền"
+)
+async def get_diseases(
+    profile_id: str,
+    current_user=Depends(get_current_user)
+):
 
-#     try:
-#         diseases = profile_service.get_diseases(
-#             current_user_id=current_user["user_id"],
-#             target_profile_id=profile_id
-#         )
+    try:
+        diseases = profile_service.get_diseases_by_profile_id(
+            current_user_id=current_user["user_id"],
+            target_profile_id=profile_id
+        )
 
-#         return {
-#             "message": "Get diseases success",
-#             "data": diseases
-#         }
+        return {
+            "message": "Get diseases success",
+            "data": diseases
+        }
 
-#     except PermissionError as e:
+    except PermissionError as e:
 
-#         raise HTTPException(
-#             status_code=status.HTTP_403_FORBIDDEN,
-#             detail=str(e)
-#         )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(e)
+        )
 
-#     except ValueError as e:
+    except ValueError as e:
 
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST,
-#             detail=str(e)
-#         )
-
-
-# @router.post(
-#     "/{profile_id}/diseases/{disease_id}",
-#     summary="Thêm bệnh"
-# )
-# async def add_disease(
-#     profile_id: int,
-#     disease_id: int,
-#     current_user=Depends(get_current_user)
-# ):
-
-#     try:
-#         profile = profile_service.add_disease(
-#             current_user_id=current_user["user_id"],
-#             target_profile_id=profile_id,
-#             disease_id=disease_id
-#         )
-
-#         return {
-#             "message": "Add disease success",
-#             "data": profile
-#         }
-
-#     except PermissionError as e:
-
-#         raise HTTPException(
-#             status_code=status.HTTP_403_FORBIDDEN,
-#             detail=str(e)
-#         )
-
-#     except ValueError as e:
-
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST,
-#             detail=str(e)
-#         )
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
 
 
-# @router.delete(
-#     "/{profile_id}/diseases/{disease_id}",
-#     summary="Xóa bệnh"
-# )
-# async def delete_disease(
-#     profile_id: int,
-#     disease_id: int,
-#     current_user=Depends(get_current_user)
-# ):
+@router.post(
+    "/{profile_id}/diseases/{disease_id}",
+    summary="Thêm bệnh nền"
+)
+async def add_disease(
+    profile_id: str,
+    disease_id: str,
+    current_user=Depends(get_current_user)
+):
 
-#     try:
-#         profile = profile_service.delete_disease(
-#             current_user_id=current_user["user_id"],
-#             target_profile_id=profile_id,
-#             disease_id=disease_id
-#         )
+    try:
+        success = profile_service.add_disease_to_profile(
+            current_user_id=current_user["user_id"],
+            target_profile_id=profile_id,
+            disease_id=disease_id
+        )
 
-#         return {
-#             "message": "Delete disease success",
-#             "data": profile
-#         }
+        return {
+            "message": "Add disease success",
+            "data": success
+        }
 
-#     except PermissionError as e:
+    except PermissionError as e:
 
-#         raise HTTPException(
-#             status_code=status.HTTP_403_FORBIDDEN,
-#             detail=str(e)
-#         )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(e)
+        )
 
-#     except ValueError as e:
+    except ValueError as e:
 
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST,
-#             detail=str(e)
-#         )
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
 
+
+@router.delete(
+    "/{profile_id}/diseases/{disease_id}",
+    summary="Xóa bệnh nền khỏi hồ sơ"
+)
+async def remove_disease(
+    profile_id: str,
+    disease_id: str,
+    current_user=Depends(get_current_user)
+):
+
+    try:
+        success = profile_service.remove_disease_from_profile(
+            current_user_id=current_user["user_id"],
+            target_profile_id=profile_id,
+            disease_id=disease_id
+        )
+
+        return {
+            "message": "Delete disease success",
+            "data": success
+        }
+
+    except PermissionError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(e)
+        )
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
 
 # # =========================
 # # ALLERGIES

@@ -8,6 +8,7 @@ from app.helpers.convert_time import to_vn_time
 from app.schemas.update_profile import UpdateProfileRequest
 
 from app.repositories.health_goal_repo import HealthGoalRepository
+from app.repositories.disease_repo import DiseaseRepository
 
 
 class UserProfileRepository(BaseRepository):
@@ -15,6 +16,7 @@ class UserProfileRepository(BaseRepository):
     def __init__(self, db):
         super().__init__(db)
         self.health_goal_repo = HealthGoalRepository(db)
+        self.disease_repo = DiseaseRepository(db)
 
     # =========================
     # BASIC
@@ -231,82 +233,78 @@ class UserProfileRepository(BaseRepository):
 
         return self.write(query)
 
-    # def delete_health_goal(
-    #     self,
-    #     profile_id: int,
-    #     health_goal_id: int
-    # ) -> UserProfile | None:
-
-    #     profile = self.get_user_profile_by_id(profile_id)
-
-    #     if profile is None:
-    #         return None
-
-    #     profile.health_goals = [
-    #         goal
-    #         for goal in profile.health_goals
-    #         if goal.id != health_goal_id
-    #     ]
-
-    #     return profile.health_goals
-
     # # =========================
     # # DISEASES
     # # =========================
 
-    # def get_diseases_by_profile_id(
-    #     self,
-    #     profile_id: int
-    # ) -> list[Disease]:
+    def get_diseases_by_profile_id(
+        self,
+        profile_id: str
+    ) -> list[Disease]:
 
-    #     profile = self.get_user_profile_by_id(profile_id)
+        def query(tx):
+            result = tx.run("""
+                MATCH (p:Profile {id: $profile_id})
+                    -[:HAS_DISEASE]->(d:Disease)
+                RETURN d
+            """, {
+                "profile_id": profile_id
+            })
 
-    #     if profile is None:
-    #         return []
+            return [
+                self.disease_repo._map_disease(record)
+                for record in result
+            ]
 
-    #     return profile.diseases
+        return self.read(query)
 
-    # def add_disease(
-    #     self,
-    #     profile_id: int,
-    #     disease: Disease
-    # ) -> UserProfile | None:
+    def add_disease_to_profile(
+        self,
+        profile_id: str,
+        disease_id: str
+    ) -> bool:
+        def query(tx):
+            result = tx.run("""
+                MATCH (p:Profile {id: $profile_id})
+                MATCH (d:Disease {id: $disease_id})
 
-    #     profile = self.get_user_profile_by_id(profile_id)
+                MERGE (p)-[:HAS_DISEASE]->(d)
 
-    #     if profile is None:
-    #         return None
+                RETURN COUNT(d) > 0 AS success
+            """, {
+                "profile_id": profile_id,
+                "disease_id": disease_id
+            })
 
-    #     exists = any(
-    #         d.id == disease.id
-    #         for d in profile.diseases
-    #     )
+            record = result.single()
+            return record["success"] if record else False
 
-    #     if exists:
-    #         raise ValueError("Disease already exists")
+        return self.write(query)
 
-    #     profile.diseases.append(disease)
 
-    #     return profile.diseases
+    def remove_disease_from_profile(
+        self,
+        profile_id: str,
+        disease_id: str
+    ) -> bool:
+        def query(tx):
+            result = tx.run("""
+                MATCH (p:Profile {id: $profile_id})
+                    -[r:HAS_DISEASE]->
+                    (d:Disease {id: $disease_id})
 
-    # def delete_disease(
-    #     self,
-    #     profile_id: int,
-    #     disease_id: int
-    # ) -> UserProfile | None:
+                DELETE r
 
-    #     profile = self.get_user_profile_by_id(profile_id)
+                RETURN COUNT(r) > 0 AS success
+            """, {
+                "profile_id": profile_id,
+                "disease_id": disease_id
+            })
 
-    #     if profile is None:
-    #         return None
+            record = result.single()
+            return record["success"] if record else False
 
-    #     profile.diseases = [
-    #         disease
-    #         for disease in profile.diseases
-    #         if disease.id != disease_id
-    #     ]
-
-    #     return profile.diseases
+        return self.write(query)
 
     # # =========================
     # # ALLERGIES
