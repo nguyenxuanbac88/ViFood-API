@@ -281,7 +281,6 @@ class UserProfileRepository(BaseRepository):
 
         return self.write(query)
 
-
     def remove_disease_from_profile(
         self,
         profile_id: str,
@@ -310,59 +309,73 @@ class UserProfileRepository(BaseRepository):
     # # ALLERGIES
     # # =========================
 
-    # def get_allergies_by_profile_id(
-    #     self,
-    #     profile_id: int
-    # ) -> list[Allergy]:
+    def get_allergies_by_profile_id(
+        self,
+        profile_id: str
+    ) -> list[Allergy]:
 
-    #     profile = self.get_user_profile_by_id(profile_id)
+        def query(tx):
+            result = tx.run("""
+                MATCH (p:Profile {id: $profile_id})
+                    -[:HAS_ALLERGY]->(a:Allergy)
+                RETURN a
+            """, {
+                "profile_id": profile_id
+            })
 
-    #     if profile is None:
-    #         return []
+            return [
+                self.allergy_repo._map_allergy(record)
+                for record in result
+            ]
 
-    #     return profile.allergies
+        return self.read(query)
 
-    # def add_allergy(
-    #     self,
-    #     profile_id: int,
-    #     allergy: Allergy
-    # ) -> UserProfile | None:
+    def add_allergy_to_profile(
+        self,
+        profile_id: str,
+        allergy_id: str
+    ) -> bool:
+        def query(tx):
+            result = tx.run("""
+                MATCH (p:Profile {id: $profile_id})
+                MATCH (a:Allergy {id: $allergy_id})
 
-    #     profile = self.get_user_profile_by_id(profile_id)
+                MERGE (p)-[:HAS_ALLERGY]->(a)
 
-    #     if profile is None:
-    #         return None
+                RETURN COUNT(a) > 0 AS success
+            """, {
+                "profile_id": profile_id,
+                "allergy_id": allergy_id
+            })
 
-    #     exists = any(
-    #         allergy_item.id == allergy.id
-    #         for allergy_item in profile.allergies
-    #     )
+            record = result.single()
+            return record["success"] if record else False
 
-    #     if exists:
-    #         raise ValueError("Allergy already exists")
+        return self.write(query)
 
-    #     profile.allergies.append(allergy)
+    def remove_allergy_from_profile(
+        self,
+        profile_id: str,
+        allergy_id: str
+    ) -> bool:
+        def query(tx):
+            result = tx.run("""
+                MATCH (p:Profile {id: $profile_id})
+                    -[r:HAS_ALLERGY]->
+                    (a:Allergy {id: $allergy_id})
 
-    #     return profile.allergies
+                DELETE r
 
-    # def delete_allergy(
-    #     self,
-    #     profile_id: int,
-    #     allergy_id: int
-    # ) -> UserProfile | None:
+                RETURN COUNT(r) > 0 AS success
+            """, {
+                "profile_id": profile_id,
+                "allergy_id": allergy_id
+            })
 
-    #     profile = self.get_user_profile_by_id(profile_id)
+            record = result.single()
+            return record["success"] if record else False
 
-    #     if profile is None:
-    #         return None
-
-    #     profile.allergies = [
-    #         allergy
-    #         for allergy in profile.allergies
-    #         if allergy.id != allergy_id
-    #     ]
-
-    #     return profile.allergies
+        return self.write(query)
 
     # =========================
     # FAMILY MEMBERS

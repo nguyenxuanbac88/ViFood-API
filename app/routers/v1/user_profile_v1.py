@@ -177,7 +177,7 @@ async def delete_user_profile(
 ):
 
     try:
-        profile_service.delete_family_meber(
+        profile_service.delete_family_member(
             current_user_id=current_user["user_id"],
             target_profile_id=profile_id,
         )
@@ -428,110 +428,110 @@ async def remove_disease(
 # # ALLERGIES
 # # =========================
 
-# @router.get(
-#     "/{profile_id}/allergies",
-#     summary="Lấy danh sách dị ứng"
-# )
-# async def get_allergies(
-#     profile_id: int,
-#     current_user=Depends(get_current_user)
-# ):
+@router.get(
+    "/{profile_id}/allergies",
+    summary="Lấy danh sách dị ứng"
+)
+async def get_allergies(
+    profile_id: str,
+    current_user=Depends(get_current_user)
+):
 
-#     try:
-#         allergies = profile_service.get_allergies(
-#             current_user_id=current_user["user_id"],
-#             target_profile_id=profile_id
-#         )
+    try:
+        allergies = profile_service.get_allergies_by_profile_id(
+            current_user_id=current_user["user_id"],
+            target_profile_id=profile_id
+        )
 
-#         return {
-#             "message": "Get allergies success",
-#             "data": allergies
-#         }
+        return {
+            "message": "Get allergies success",
+            "data": allergies
+        }
 
-#     except PermissionError as e:
+    except PermissionError as e:
 
-#         raise HTTPException(
-#             status_code=status.HTTP_403_FORBIDDEN,
-#             detail=str(e)
-#         )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(e)
+        )
 
-#     except ValueError as e:
+    except ValueError as e:
 
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST,
-#             detail=str(e)
-#         )
-
-
-# @router.post(
-#     "/{profile_id}/allergies/{allergy_id}",
-#     summary="Thêm dị ứng"
-# )
-# async def add_allergy(
-#     profile_id: int,
-#     allergy_id: int,
-#     current_user=Depends(get_current_user)
-# ):
-
-#     try:
-#         profile = profile_service.add_allergy(
-#             current_user_id=current_user["user_id"],
-#             target_profile_id=profile_id,
-#             allergy_id=allergy_id
-#         )
-
-#         return {
-#             "message": "Add allergy success",
-#             "data": profile
-#         }
-
-#     except PermissionError as e:
-
-#         raise HTTPException(
-#             status_code=status.HTTP_403_FORBIDDEN,
-#             detail=str(e)
-#         )
-
-#     except ValueError as e:
-
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST,
-#             detail=str(e)
-#         )
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
 
 
-# @router.delete(
-#     "/{profile_id}/allergies/{allergy_id}",
-#     summary="Xóa dị ứng"
-# )
-# async def delete_allergy(
-#     profile_id: int,
-#     allergy_id: int,
-#     current_user=Depends(get_current_user)
-# ):
+@router.post(
+    "/{profile_id}/allergies/{allergy_id}",
+    summary="Thêm dị ứng vào hồ sơ"
+)
+async def add_allergy(
+    profile_id: str,
+    allergy_id: str,
+    current_user=Depends(get_current_user)
+):
 
-#     try:
-#         profile = profile_service.delete_allergy(
-#             current_user_id=current_user["user_id"],
-#             target_profile_id=profile_id,
-#             allergy_id=allergy_id
-#         )
+    try:
+        success = profile_service.add_allergy_to_profile(
+            current_user_id=current_user["user_id"],
+            target_profile_id=profile_id,
+            allergy_id=allergy_id
+        )
 
-#         return {
-#             "message": "Delete allergy success",
-#             "data": profile
-#         }
+        return {
+            "message": "Add allergy success",
+            "data": success
+        }
 
-#     except PermissionError as e:
+    except PermissionError as e:
 
-#         raise HTTPException(
-#             status_code=status.HTTP_403_FORBIDDEN,
-#             detail=str(e)
-#         )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(e)
+        )
 
-#     except ValueError as e:
+    except ValueError as e:
 
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST,
-#             detail=str(e)
-#         )
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+
+
+@router.delete(
+    "/{profile_id}/allergies/{allergy_id}",
+    summary="Xóa dị ứng khỏi hồ sơ"
+)
+async def remove_allergy(
+    profile_id: str,
+    allergy_id: str,
+    current_user=Depends(get_current_user)
+):
+
+    try:
+        success = profile_service.remove_allergy_from_profile(
+            current_user_id=current_user["user_id"],
+            target_profile_id=profile_id,
+            allergy_id=allergy_id
+        )
+
+        return {
+            "message": "Delete allergy success",
+            "data": success
+        }
+
+    except PermissionError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=str(e)
+        )
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
