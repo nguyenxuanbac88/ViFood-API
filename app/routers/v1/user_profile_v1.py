@@ -424,6 +424,7 @@ async def remove_disease(
             detail=str(e)
         )
 
+
 # # =========================
 # # ALLERGIES
 # # =========================

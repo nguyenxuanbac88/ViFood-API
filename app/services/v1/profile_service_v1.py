@@ -1,11 +1,6 @@
 
 from app.models.user_profile import UserProfile
 
-# from app.services.v0.health_goal_service import HealthGoalServiceV0
-from app.services.v1.disease_service_v1 import DiseaseServiceV1
-from app.services.v1.allergy_service_v1 import AllergyServiceV1
-from app.services.v1.health_goal_service_v1 import HealthGoalServiceV1
-
 from app.repositories.profile_repo import UserProfileRepository
 from app.repositories.user_repo import UserRepository
 from app.schemas.update_profile import UpdateProfileRequest
@@ -167,7 +162,6 @@ class UserProfileServiceV1:
             target_profile_id
         )
 
-
     def add_disease_to_profile(
         self,
         current_user_id: str,
@@ -186,7 +180,6 @@ class UserProfileServiceV1:
             raise ValueError("Disease not found")
 
         return success
-
 
     def remove_disease_from_profile(
         self,
@@ -223,7 +216,6 @@ class UserProfileServiceV1:
             target_profile_id
         )
 
-
     def add_allergy_to_profile(
         self,
         current_user_id: str,
@@ -242,7 +234,6 @@ class UserProfileServiceV1:
             raise ValueError("Allergy not found")
 
         return success
-
 
     def remove_allergy_from_profile(
         self,
