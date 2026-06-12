@@ -227,10 +227,10 @@ def seed(db: FakeDB):
     # DISEASES
     # =========================
     
-    db.diseases.extend([
-        Disease(id=1, name="Bệnh tiểu đường"),
-        Disease(id=2, name="Bệnh tim mạch"),
-        Disease(id=3, name="Bệnh béo phì")])
+    # db.diseases.extend([
+    #     Disease(id=1, name="Bệnh tiểu đường"),
+    #     Disease(id=2, name="Bệnh tim mạch"),
+    #     Disease(id=3, name="Bệnh béo phì")])
     
     # =========================
     # HEALTH GOALS
