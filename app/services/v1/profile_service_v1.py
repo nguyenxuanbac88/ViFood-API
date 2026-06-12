@@ -10,6 +10,8 @@ from app.repositories.profile_repo import UserProfileRepository
 from app.repositories.user_repo import UserRepository
 from app.schemas.update_profile import UpdateProfileRequest
 
+from app.models.health_goal import HealthGoal
+
 from app.core.database import neo4j_db
 
 # health_goal_service = HealthGoalServiceV0()
@@ -117,81 +119,45 @@ class UserProfileServiceV1:
 
         return True
         
-    # def delete_user_profile(
-    #     self,
-    #     current_user_id: int,
-    #     target_profile_id: int
-    # ) -> bool:
-
-    #     profile = self.profile_repo.get_user_profile_by_id(
-    #         target_profile_id
-    #     )
-
-    #     if not profile:
-    #         raise ValueError("UserProfile not found")
-
-    #     # Chỉ được xóa family member của mình
-    #     if profile.parent_profile_id is None:
-    #         raise PermissionError(
-    #             "You can only delete family members"
-    #         )
-
-    #     parent = self.profile_repo.get_user_profile_by_id(
-    #         profile.parent_profile_id
-    #     )
-
-    #     if not parent:
-    #         raise ValueError("Parent profile not found")
-
-    #     if parent.userId != current_user_id:
-    #         raise PermissionError(
-    #             "You can only delete your own family members"
-    #         )
-
-    #     return self.profile_repo.delete_user_profile(
-    #         target_profile_id
-    #     )
-        
     # # =========================
     # # HEALTH GOALS
     # # =========================
 
-    # def get_health_goals(
-    #     self,
-    #     current_user_id: int,
-    #     target_profile_id: int
-    # ) -> list[HealthGoal]:
+    def get_health_goals_by_profile_id(
+        self,
+        current_user_id: int,
+        target_profile_id: int
+    ) -> list[HealthGoal]:
 
-    #     profile = self.get_user_profile(
-    #         current_user_id,
-    #         target_profile_id
-    #     )
+        profile = self.profile_repo.get_profile_by_user_access(
+            current_user_id,
+            target_profile_id
+        )
+        
+        if profile is None:
+            raise ValueError("User Profile not found")
+        
+        return self.profile_repo.get_health_goals_by_profile_id(target_profile_id)
+    
+    def add_health_goal_to_profile(
+        self,
+        current_user_id: str,
+        target_profile_id: str,
+        health_goal_id: str
+    ) -> bool:
 
-    #     return profile.health_goals
+        profile = self.profile_repo.get_profile_by_user_access(
+            current_user_id,
+            target_profile_id
+        )
 
-    # def add_health_goal(
-    #     self,
-    #     current_user_id: int,
-    #     target_profile_id: int,
-    #     health_goal_id: int
-    # ) -> UserProfile:
+        if profile is None:
+            raise ValueError("User Profile not found")
 
-    #     self._validate_profile_access(
-    #         current_user_id,
-    #         target_profile_id
-    #     )
-
-    #     goal = health_goal_service.get_health_goal_by_id(
-    #         health_goal_id
-    #     )
-
-    #     if not goal:
-    #         raise ValueError("Health goal not found")
-
-    #     return self.profile_repo.add_health_goal(
-    #         target_profile_id,
-    #         goal
-    #     )
+        return self.profile_repo.add_health_goal_to_profile(
+            target_profile_id,
+            health_goal_id
+        )
 
     # def delete_health_goal(
     #     self,

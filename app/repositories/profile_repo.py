@@ -7,11 +7,14 @@ from app.helpers.convert_time import to_vn_time
 
 from app.schemas.update_profile import UpdateProfileRequest
 
+from app.repositories.health_goal_repo import HealthGoalRepository
+
 
 class UserProfileRepository(BaseRepository):
     
     def __init__(self, db):
         super().__init__(db)
+        self.health_goal_repo = HealthGoalRepository(db)
 
     # =========================
     # BASIC
@@ -156,12 +159,58 @@ class UserProfileRepository(BaseRepository):
 
         return self.write(query)
 
-    # def update_user_profile(
+    # =========================
+    # HEALTH GOALS
+    # =========================
+
+    def get_health_goals_by_profile_id(
+        self,
+        profile_id: str
+    ) -> list[HealthGoal]:
+
+        def query(tx):
+            result = tx.run("""
+                MATCH (p:Profile {id: $profile_id})
+                    -[:HAS_HEALTH_GOAL]->(h:HealthGoal)
+                RETURN h
+            """, {
+                "profile_id": profile_id
+            })
+
+            return [
+                self.health_goal_repo._map_health_goal(record)
+                for record in result
+            ]
+
+        return self.read(query)
+
+    def add_health_goal_to_profile(
+        self,
+        profile_id: str,
+        health_goal_id: str
+    ) -> bool:
+        def query(tx):
+            result = tx.run("""
+                MATCH (p:Profile {id: $profile_id})
+                MATCH (h:HealthGoal {id: $health_goal_id})
+
+                MERGE (p)-[:HAS_HEALTH_GOAL]->(h)
+
+                RETURN COUNT(h) > 0 AS success
+            """, {
+                "profile_id": profile_id,
+                "health_goal_id": health_goal_id
+            })
+
+            record = result.single()
+            return record["success"] if record else False
+
+        return self.write(query)
+
+    # def delete_health_goal(
     #     self,
     #     profile_id: int,
-    #     first_name: str,
-    #     last_name: str,
-    #     avatar: str | None = None
+    #     health_goal_id: int
     # ) -> UserProfile | None:
 
     #     profile = self.get_user_profile_by_id(profile_id)
@@ -169,238 +218,129 @@ class UserProfileRepository(BaseRepository):
     #     if profile is None:
     #         return None
 
-    #     profile.first_name = first_name
-    #     profile.last_name = last_name
+    #     profile.health_goals = [
+    #         goal
+    #         for goal in profile.health_goals
+    #         if goal.id != health_goal_id
+    #     ]
 
-    #     if avatar is not None:
-    #         profile.avatar = avatar
+    #     return profile.health_goals
 
-    #     return profile
+    # # =========================
+    # # DISEASES
+    # # =========================
 
-    # def delete_user_profile(
+    # def get_diseases_by_profile_id(
     #     self,
     #     profile_id: int
-    # ) -> UserProfile:
+    # ) -> list[Disease]:
 
     #     profile = self.get_user_profile_by_id(profile_id)
 
     #     if profile is None:
-    #         return False
+    #         return []
 
-    #     # Nếu là family member thì remove khỏi parent
-    #     if profile.parent_profile_id is not None:
-    #         parent = self.get_user_profile_by_id(profile.parent_profile_id)
+    #     return profile.diseases
 
-    #         if parent is not None:
-    #             parent.family_members = [
-    #                 member
-    #                 for member in parent.family_members
-    #                 if member.profile_id != profile_id
-    #             ]
-
-    #     self.db.user_profiles.remove(profile)
-        
-    #     return parent.family_members if parent else []
-
-    # def delete_family_member_profile(
+    # def add_disease(
     #     self,
-    #     member_profile_id: int
-    # ) -> bool:
+    #     profile_id: int,
+    #     disease: Disease
+    # ) -> UserProfile | None:
 
-    #     member = self.get_user_profile_by_id(member_profile_id)
+    #     profile = self.get_user_profile_by_id(profile_id)
 
-    #     if member is None:
-    #         return False
+    #     if profile is None:
+    #         return None
 
-    #     # Tìm parent và remove khỏi danh sách family members
-    #     if member.parent_profile_id is not None:
-    #         parent = self.get_user_profile_by_id(member.parent_profile_id)
+    #     exists = any(
+    #         d.id == disease.id
+    #         for d in profile.diseases
+    #     )
 
-    #         if parent is not None:
-    #             parent.family_members = [
-    #                 family_member
-    #                 for family_member in parent.family_members
-    #                 if family_member.profile_id != member_profile_id
-    #             ]
+    #     if exists:
+    #         raise ValueError("Disease already exists")
 
-    #     # Xóa profile khỏi database
-    #     self.db.user_profiles.remove(member)
+    #     profile.diseases.append(disease)
 
-    #     return True
+    #     return profile.diseases
 
-    # =========================
-    # HEALTH GOALS
-    # =========================
+    # def delete_disease(
+    #     self,
+    #     profile_id: int,
+    #     disease_id: int
+    # ) -> UserProfile | None:
 
-    def get_health_goals_by_profile_id(
-        self,
-        profile_id: int
-    ) -> list[HealthGoal]:
+    #     profile = self.get_user_profile_by_id(profile_id)
 
-        profile = self.get_user_profile_by_id(profile_id)
+    #     if profile is None:
+    #         return None
 
-        if profile is None:
-            return []
+    #     profile.diseases = [
+    #         disease
+    #         for disease in profile.diseases
+    #         if disease.id != disease_id
+    #     ]
 
-        return profile.health_goals
+    #     return profile.diseases
 
-    def add_health_goal(
-        self,
-        profile_id: int,
-        health_goal: HealthGoal
-    ) -> UserProfile | None:
+    # # =========================
+    # # ALLERGIES
+    # # =========================
 
-        profile = self.get_user_profile_by_id(profile_id)
+    # def get_allergies_by_profile_id(
+    #     self,
+    #     profile_id: int
+    # ) -> list[Allergy]:
 
-        if profile is None:
-            return None
+    #     profile = self.get_user_profile_by_id(profile_id)
 
-        exists = any(
-            goal.id == health_goal.id
-            for goal in profile.health_goals
-        )
+    #     if profile is None:
+    #         return []
 
-        if exists:
-            raise ValueError("Health goal already exists")
+    #     return profile.allergies
 
-        profile.health_goals.append(health_goal)
+    # def add_allergy(
+    #     self,
+    #     profile_id: int,
+    #     allergy: Allergy
+    # ) -> UserProfile | None:
 
-        return profile.health_goals
+    #     profile = self.get_user_profile_by_id(profile_id)
 
-    def delete_health_goal(
-        self,
-        profile_id: int,
-        health_goal_id: int
-    ) -> UserProfile | None:
+    #     if profile is None:
+    #         return None
 
-        profile = self.get_user_profile_by_id(profile_id)
+    #     exists = any(
+    #         allergy_item.id == allergy.id
+    #         for allergy_item in profile.allergies
+    #     )
 
-        if profile is None:
-            return None
+    #     if exists:
+    #         raise ValueError("Allergy already exists")
 
-        profile.health_goals = [
-            goal
-            for goal in profile.health_goals
-            if goal.id != health_goal_id
-        ]
+    #     profile.allergies.append(allergy)
 
-        return profile.health_goals
+    #     return profile.allergies
 
-    # =========================
-    # DISEASES
-    # =========================
+    # def delete_allergy(
+    #     self,
+    #     profile_id: int,
+    #     allergy_id: int
+    # ) -> UserProfile | None:
 
-    def get_diseases_by_profile_id(
-        self,
-        profile_id: int
-    ) -> list[Disease]:
+    #     profile = self.get_user_profile_by_id(profile_id)
 
-        profile = self.get_user_profile_by_id(profile_id)
+    #     if profile is None:
+    #         return None
 
-        if profile is None:
-            return []
+    #     profile.allergies = [
+    #         allergy
+    #         for allergy in profile.allergies
+    #         if allergy.id != allergy_id
+    #     ]
 
-        return profile.diseases
-
-    def add_disease(
-        self,
-        profile_id: int,
-        disease: Disease
-    ) -> UserProfile | None:
-
-        profile = self.get_user_profile_by_id(profile_id)
-
-        if profile is None:
-            return None
-
-        exists = any(
-            d.id == disease.id
-            for d in profile.diseases
-        )
-
-        if exists:
-            raise ValueError("Disease already exists")
-
-        profile.diseases.append(disease)
-
-        return profile.diseases
-
-    def delete_disease(
-        self,
-        profile_id: int,
-        disease_id: int
-    ) -> UserProfile | None:
-
-        profile = self.get_user_profile_by_id(profile_id)
-
-        if profile is None:
-            return None
-
-        profile.diseases = [
-            disease
-            for disease in profile.diseases
-            if disease.id != disease_id
-        ]
-
-        return profile.diseases
-
-    # =========================
-    # ALLERGIES
-    # =========================
-
-    def get_allergies_by_profile_id(
-        self,
-        profile_id: int
-    ) -> list[Allergy]:
-
-        profile = self.get_user_profile_by_id(profile_id)
-
-        if profile is None:
-            return []
-
-        return profile.allergies
-
-    def add_allergy(
-        self,
-        profile_id: int,
-        allergy: Allergy
-    ) -> UserProfile | None:
-
-        profile = self.get_user_profile_by_id(profile_id)
-
-        if profile is None:
-            return None
-
-        exists = any(
-            allergy_item.id == allergy.id
-            for allergy_item in profile.allergies
-        )
-
-        if exists:
-            raise ValueError("Allergy already exists")
-
-        profile.allergies.append(allergy)
-
-        return profile.allergies
-
-    def delete_allergy(
-        self,
-        profile_id: int,
-        allergy_id: int
-    ) -> UserProfile | None:
-
-        profile = self.get_user_profile_by_id(profile_id)
-
-        if profile is None:
-            return None
-
-        profile.allergies = [
-            allergy
-            for allergy in profile.allergies
-            if allergy.id != allergy_id
-        ]
-
-        return profile.allergies
+    #     return profile.allergies
 
     # =========================
     # FAMILY MEMBERS
