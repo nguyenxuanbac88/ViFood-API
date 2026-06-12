@@ -7,7 +7,6 @@ from app.models.nutrient import Nutrient
 from app.models.health_effect import HealthEffect
 from app.models.food_category import FoodCategory
 from app.models.allergy import Allergy
-from app.models.disease import Disease
 # user and user_profile not required in seed data
 
 

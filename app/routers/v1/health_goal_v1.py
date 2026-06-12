@@ -50,6 +50,7 @@ def list_health_goals():
 
         return {
             "message": "Get Health Goals success",
+            "data": health_goal
         }
     except PermissionError as e:
 
