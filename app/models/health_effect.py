@@ -3,7 +3,7 @@ from typing import Optional
 
 
 class HealthEffect(BaseModel):
-    id: str
+    id: Optional[str] = None
     title: str
     key: Optional[str] = None
     description: Optional[str] = None

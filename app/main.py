@@ -40,6 +40,7 @@ from app.routers.v1.health_goal_v1 import router as health_goal_v1_router
 from app.routers.v1.disease_v1 import router as disease_v1_router
 from app.routers.v1.allergy_v1 import router as allergy_v1_router
 from app.routers.v1.food_category_v1 import router as food_category_v1_router
+from app.routers.v1.health_effect_v1 import router as health_effect_v1_router
 
 
 # Tạo FastAPI app instance
@@ -139,6 +140,8 @@ app.include_router(disease_v1_router, prefix=f"{settings.api_prefix}/v1")
 app.include_router(allergy_v1_router, prefix=f"{settings.api_prefix}/v1")
 
 app.include_router(food_category_v1_router, prefix=f"{settings.api_prefix}/v1")
+
+app.include_router(health_effect_v1_router, prefix=f"{settings.api_prefix}/v1")
 
 
 # ==================== Root Endpoints ====================
