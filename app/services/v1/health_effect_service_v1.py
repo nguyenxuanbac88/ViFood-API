@@ -1,12 +1,28 @@
 from app.models.health_effect import HealthEffect
 from app.repositories.health_effect_repo import HealthEffectRepository
 from app.schemas.effect_schema import HealthEffectRequest
+from app.helpers.slug import generate_key
 
 
 class HealthEffectServiceV1:
 
     def __init__(self, db):
         self.repo = HealthEffectRepository(db)
+        
+    def get_or_create_by_title(self, title: str):
+        existing = self.repo._find_by_key(title)
+
+        if existing:
+            return existing
+        
+        key = generate_key(title)
+
+        effect = HealthEffect(
+            title=title,
+            key=key
+        )
+
+        return self.repo.create(effect)
 
     def get_all_health_effects(self):
         effects = self.repo.get_all()

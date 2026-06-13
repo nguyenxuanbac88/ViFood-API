@@ -1,11 +1,22 @@
 from app.models.food_category import FoodCategory
 from app.repositories.food_category_repo import FoodCategoryRepository
+from app.helpers.slug import generate_key
 
 
 class FoodCategoryServiceV1:
 
     def __init__(self, db):
         self.repo = FoodCategoryRepository(db)
+        
+    def get_or_create_by_name(self, name: str):
+        existing = self.repo._find_by_key(name)
+
+        if existing:
+            return existing
+        
+        key = generate_key(name)
+
+        return self.repo.create(FoodCategory(name=name, key=key))
 
     def get_all_food_categories(self):
         categories = self.repo.get_all()
