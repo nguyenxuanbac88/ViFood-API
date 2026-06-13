@@ -1,6 +1,6 @@
 from app.models.nutrient import Nutrient
 from app.repositories.base_repo import BaseRepository
-from app.helpers.slug import generate_key
+# from app.helpers.slug import generate_key
 
 
 class NutrientRepository(BaseRepository):

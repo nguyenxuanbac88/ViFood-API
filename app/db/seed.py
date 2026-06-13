@@ -3,7 +3,6 @@ from app.db.memory import FakeDB
 from app.models.product import Product, ProductNutrition
 from app.models.ingredient import Ingredient
 from app.models.additive import Additive
-from app.models.nutrient import Nutrient
 from app.models.health_effect import HealthEffect
 from app.models.food_category import FoodCategory
 # from app.models.allergy import Allergy
