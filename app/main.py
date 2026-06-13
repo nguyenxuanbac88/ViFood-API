@@ -13,9 +13,6 @@ from app.utils.file_utils import ensure_directory_exists
 
 from app.core.database import neo4j_db
 
-from app.db import db
-# from app.db.seed import seed
-
 # Import routers
 from app.routers import upload, example
 # from app.routers.products_alias import router as products_alias_router

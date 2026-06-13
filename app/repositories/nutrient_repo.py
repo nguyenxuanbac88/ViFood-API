@@ -1,8 +1,6 @@
 from app.models.nutrient import Nutrient
 from app.repositories.base_repo import BaseRepository
 from app.helpers.slug import generate_key
-from app.models.health_effect import HealthEffect
-from app.models.food_category import FoodCategory
 
 
 class NutrientRepository(BaseRepository):
