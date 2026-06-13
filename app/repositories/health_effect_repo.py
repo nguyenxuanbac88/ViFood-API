@@ -1,10 +1,12 @@
 from app.models.health_effect import HealthEffect
+from app.repositories.base_repo import BaseRepository
+from app.helpers.slug import generate_key
 
 
-class HealthEffectRepository:
+class HealthEffectRepository(BaseRepository):
 
     def __init__(self, db):
-        self.db = db
+        super().__init__(db)
 
     def get_all(self):
         return self.db.health_effects
