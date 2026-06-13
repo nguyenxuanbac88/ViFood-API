@@ -132,7 +132,6 @@ class NutrientRepository(BaseRepository):
 
         return self.write(_query)
 
-
     def attach_category(self, nutrient_id: str, category_id: str):
         def _query(tx):
             tx.run("""
