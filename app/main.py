@@ -146,6 +146,7 @@ app.include_router(nutrient_v1_router, prefix=f"{settings.api_prefix}/v1")
 
 app.include_router(ingredient_v1_router, prefix=f"{settings.api_prefix}/v1")
 
+
 # ==================== Root Endpoints ====================
 
 @app.get(
