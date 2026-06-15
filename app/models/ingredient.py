@@ -9,7 +9,5 @@ from app.models.health_effect import HealthEffect
 class Ingredient(BaseModel):
     id: Optional[str] = None
     name: str
+    key: Optional[str] = None
     description: str | None = None
-    image: Optional[str] = None
-    effects: list[HealthEffect] = []
-    found_in: list[FoodCategory] = []
