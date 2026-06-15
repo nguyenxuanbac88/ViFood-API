@@ -31,7 +31,7 @@ def get_nutrition_by_id(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Not found"
         )
-
+        
     return {
             "message": "Get Nutri Detail success",
             "data": result,
