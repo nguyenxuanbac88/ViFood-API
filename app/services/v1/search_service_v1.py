@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 from app.models.DTOs.searchDTO import searchDTO, searchDtoDetail
-=======
-from app.models.DTOs.searchDTO import searchDTO
->>>>>>> origin/develop
 from app.models.additive import Additive
 from app.models.ingredient import Ingredient
 from app.models.nutrient import Nutrient
@@ -10,14 +6,11 @@ from app.models.nutrient import Nutrient
 from app.services.v1.additive_service_v1 import AdditiveServiceV1
 from app.services.v1.ingredient_service_v1 import IngredientServiceV1
 from app.services.v1.nutrient_service_v1 import NutrientServiceV1
-<<<<<<< HEAD
 
 from app.schemas.nutrient_schema import NutrientDetail
 from app.schemas.ingredient_schema import IngredientDetail
 from app.schemas.additive_schema import AdditiveDetail
 
-=======
->>>>>>> origin/develop
 import random
 
 
