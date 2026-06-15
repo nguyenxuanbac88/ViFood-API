@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status
 from app.services.v1.search_service_v1 import SearchServiceV1
 from app.core.database import neo4j_db
 

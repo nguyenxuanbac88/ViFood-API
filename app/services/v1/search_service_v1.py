@@ -1,7 +1,5 @@
 from app.models.DTOs.searchDTO import searchDTO
 from app.models.additive import Additive
-from app.models.food_category import FoodCategory
-from app.models.health_effect import HealthEffect
 from app.models.ingredient import Ingredient
 from app.models.nutrient import Nutrient
 
