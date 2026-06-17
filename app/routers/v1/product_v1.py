@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 
-from app.models.product import ProductCreate
 from app.services.v1.product_service_v1 import ProductServiceV1
 
 
