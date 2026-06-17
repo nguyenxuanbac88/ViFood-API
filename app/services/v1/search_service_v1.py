@@ -120,6 +120,7 @@ class SearchServiceV1:
 
         return None
     
+    # Chức năng này chưa được tối ưu
     def get_daily_feature(self) -> searchDTO | None:
         items = (
             [self.map_nutrient(n) for n in self.nutrient_service.get_all_nutrients()]
