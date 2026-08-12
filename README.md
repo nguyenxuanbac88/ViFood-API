@@ -2,13 +2,13 @@
 
 ViFood API là backend service cho **ViFood**, một nền tảng hỗ trợ người dùng hiểu rõ hơn về nhãn thực phẩm đóng gói. API cung cấp các chức năng xác thực người dùng, quản lý hồ sơ sức khỏe, tra cứu dữ liệu dinh dưỡng, thành phần, phụ gia thực phẩm và trích xuất thông tin sản phẩm từ hình ảnh nhãn thực phẩm bằng AI.
 
-Project được xây dựng theo kiến trúc phân lớp rõ ràng với **FastAPI**, **Neo4j**, **JWT Authentication**, **AWS S3** và một AI extraction service bên ngoài.
+Project được xây dựng theo kiến trúc phân lớp rõ ràng với **FastAPI**, **Neo4j**, **JWT Authentication**, **AWS S3** và **ViFood-KG-Builder** cho luồng phân tích nhãn.
 
 ## Điểm nổi bật
 
 - Cung cấp RESTful API cho dinh dưỡng, thành phần, phụ gia, danh mục thực phẩm, mục tiêu sức khỏe và hồ sơ người dùng.
 - Sử dụng Neo4j làm graph database để lưu trữ và truy vấn tri thức thực phẩm - dinh dưỡng.
-- Hỗ trợ trích xuất thông tin sản phẩm từ ảnh nhãn thực phẩm thông qua AI service.
+- Hỗ trợ trích xuất thông tin sản phẩm từ ảnh nhãn thực phẩm thông qua ViFood-KG-Builder.
 - Lưu trữ ảnh upload/scans trên AWS S3.
 - Bảo vệ các API người dùng bằng JWT access token và refresh token.
 - Hỗ trợ Docker Compose để chạy API và Neo4j cùng lúc.
@@ -50,7 +50,7 @@ Sau đó cập nhật các giá trị cần thiết trong `.env`, đặc biệt 
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 - `AWS_S3_BUCKET`
-- `AI_API_URL`
+- `KG_BUILDER_API_URL`
 
 ### 3. Chạy local
 

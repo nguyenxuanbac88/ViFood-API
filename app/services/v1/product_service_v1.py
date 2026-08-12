@@ -1,5 +1,5 @@
 import httpx
-from fastapi import UploadFile
+from fastapi import HTTPException, UploadFile
 
 from app.core.config import settings
 from app.models.product import Product
@@ -39,7 +39,10 @@ class ProductServiceV1:
         )
 
     async def extract_from_image(self, user_id: str, image: UploadFile) -> dict:
-        ai_api_url = f"{self.settings.ai_api_url.rstrip('/')}{self.settings.ai_extract}"
+        builder_api_url = (
+            f"{self.settings.kg_builder_api_url.rstrip('/')}/"
+            f"{self.settings.kg_builder_analyze_path.lstrip('/')}"
+        )
         file_content = await image.read()
         content_type = image.content_type or "image/jpeg"
 
@@ -49,24 +52,37 @@ class ProductServiceV1:
             content_type=content_type,
         )
 
-        async with httpx.AsyncClient(timeout=90) as client:
-            response = await client.post(
-                ai_api_url,
-                json={
-                    "s3_key": s3_key,
-                },
-            )
+        try:
+            async with httpx.AsyncClient(timeout=90) as client:
+                response = await client.post(
+                    builder_api_url,
+                    json={
+                        "s3_key": s3_key,
+                    },
+                )
 
-        response.raise_for_status()
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            detail = exc.response.text
+            raise HTTPException(
+                status_code=502,
+                detail=(
+                    "KG Builder analyze request failed "
+                    f"with status {exc.response.status_code}: {detail}"
+                ),
+            ) from exc
+        except httpx.RequestError as exc:
+            raise HTTPException(
+                status_code=502,
+                detail=f"Cannot connect to KG Builder at {builder_api_url}: {exc}",
+            ) from exc
+
         result = response.json()
 
-        if not result.get("success"):
-            raise Exception("AI API extract failed")
-
         return {
-            "message": result.get("message", "Extract product success"),
+            "message": "Analyze product label success",
             "data": {
-                **result["data"],
+                **result,
                 "s3_key": s3_key,
             },
         }

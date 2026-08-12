@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     
     # ==================== Server Settings ====================
     host: str = "0.0.0.0"
-    port: int = 8002
+    port: int = 8000
     
     # ==================== CORS Settings ====================
     allowed_origins: list = ["*"]
@@ -50,8 +50,8 @@ class Settings(BaseSettings):
     # ==================== URL Settings ====================
     base_url: str = "http://localhost:8000"
     api_prefix: str = "/api"
-    ai_api_url: str
-    ai_extract: str = "/extract"
+    kg_builder_api_url: str = "http://localhost:8002"
+    kg_builder_analyze_path: str = "/labels/analyze"
     products_default_version: Literal["v0", "v1"] = "v0"
     products_canary_enabled: bool = False
     products_canary_percent: int = Field(default=0, ge=0, le=100)
