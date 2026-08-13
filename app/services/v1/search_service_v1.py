@@ -33,10 +33,10 @@ class SearchServiceV1:
 
         return results
 
-    def get_all(self) -> list:
+    def get_all(self, limit: int = 50) -> list:
         results = self._get_all_nodes()
         random.shuffle(results)
-        return results
+        return results[:limit]
 
     def get_by_id(self, id: str):
         node_type = self._get_node_type(id)

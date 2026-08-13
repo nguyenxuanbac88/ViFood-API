@@ -43,6 +43,7 @@ from app.routers.v1.ingredient_v1 import router as ingredient_v1_router
 from app.routers.v1.additive_v1 import router as additive_v1_router
 from app.routers.v1.search_v1 import router as search_v1_router
 from app.routers.v1.product_v1 import router as product_v1_router
+from app.routers.v1.scan_history_v1 import router as scan_history_v1_router
 
 
 # Tạo FastAPI app instance
@@ -154,6 +155,8 @@ app.include_router(additive_v1_router, prefix=f"{settings.api_prefix}/v1")
 app.include_router(search_v1_router, prefix=f"{settings.api_prefix}/v1")
 
 app.include_router(product_v1_router, prefix=f"{settings.api_prefix}/v1")
+
+app.include_router(scan_history_v1_router, prefix=f"{settings.api_prefix}/v1")
 
 
 # ==================== Root Endpoints ====================

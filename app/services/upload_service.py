@@ -73,7 +73,7 @@ class UploadService:
         except Exception as e:
             raise HTTPException(
                 status_code=500,
-                detail=f"Lỗi khi lưu file: {str(e)}"
+                detail="Lỗi khi lưu file"
             )
         
         # Get file info

@@ -85,7 +85,8 @@ class AuthServiceV1:
 
         new_payload = {
             "user_id": payload["user_id"],
-            "email": payload["email"]
+            "email": payload["email"],
+            "type": "access"
         }
 
         new_access_token = create_access_token(new_payload)
