@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.core.config import settings
@@ -19,12 +21,17 @@ scan_history_service = ScanHistoryService(settings)
 )
 async def list_scan_history(
     limit: int = Query(default=50, ge=1, le=100),
+    date: date | None = Query(
+        default=None,
+        description="Ngày cần lấy lịch sử theo định dạng YYYY-MM-DD, tính theo múi giờ Việt Nam.",
+    ),
     current_user=Depends(get_current_user),
 ):
     try:
         records = scan_history_service.list_for_user(
             user_id=current_user["user_id"],
             limit=limit,
+            scanned_date=date,
         )
     except RuntimeError as exc:
         raise HTTPException(

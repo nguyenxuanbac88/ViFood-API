@@ -1,5 +1,6 @@
 import base64
 import httpx
+import time
 from fastapi import HTTPException, UploadFile
 from uuid import uuid4
 
@@ -56,6 +57,7 @@ class ProductServiceV1:
         )
 
     async def extract_from_image(self, user_id: str, image: UploadFile) -> dict:
+        started_at = time.perf_counter()
         builder_api_url = (
             f"{self.settings.kg_builder_api_url.rstrip('/')}/"
             f"{self.settings.kg_builder_analyze_path.lstrip('/')}"
@@ -107,6 +109,8 @@ class ProductServiceV1:
                 analysis_id=analysis_id,
                 image_ref=image_ref,
                 result=public_result,
+                image_content_type=content_type,
+                processing_time_ms=int((time.perf_counter() - started_at) * 1000),
             )
         except RuntimeError as exc:
             raise HTTPException(

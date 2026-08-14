@@ -151,12 +151,13 @@ def test_extract_from_image_calls_builder_with_image_payload_before_s3(monkeypat
             "image_ref": "scans/user-1/image.png",
         },
     }
-    assert FakeScanHistoryService.last_saved == {
-        "user_id": "user-1",
-        "analysis_id": result["data"]["analysis_id"],
-        "image_ref": "scans/user-1/image.png",
-        "result": result["data"],
-    }
+    assert FakeScanHistoryService.last_saved["user_id"] == "user-1"
+    assert FakeScanHistoryService.last_saved["analysis_id"] == result["data"]["analysis_id"]
+    assert FakeScanHistoryService.last_saved["image_ref"] == "scans/user-1/image.png"
+    assert FakeScanHistoryService.last_saved["result"] == result["data"]
+    assert FakeScanHistoryService.last_saved["image_content_type"] == "image/png"
+    assert isinstance(FakeScanHistoryService.last_saved["processing_time_ms"], int)
+    assert FakeScanHistoryService.last_saved["processing_time_ms"] >= 0
 
 
 def test_extract_from_image_does_not_upload_when_builder_fails(monkeypatch):
