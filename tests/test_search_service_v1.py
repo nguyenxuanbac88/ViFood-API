@@ -14,6 +14,7 @@ def make_item(item_id: str, name: str):
 def make_service(items):
     service = SearchServiceV1.__new__(SearchServiceV1)
     service._get_all_nodes = lambda: items
+    service.get_by_id = lambda item_id: None
     return service
 
 
@@ -28,6 +29,23 @@ def test_daily_feature_is_stable_for_the_same_day():
     second = service.get_daily_feature(target_date=date(2026, 8, 14))
 
     assert first.id == second.id
+
+
+def test_daily_feature_returns_detail_when_available():
+    detail = SimpleNamespace(
+        id="ADDITIVE:e100",
+        name="E100",
+        description="Phu gia tao mau",
+        sections=[],
+    )
+    service = make_service([
+        make_item("ADDITIVE:e100", "E100"),
+    ])
+    service.get_by_id = lambda item_id: detail if item_id == "ADDITIVE:e100" else None
+
+    result = service.get_daily_feature(target_date=date(2026, 8, 14))
+
+    assert result.description == "Phu gia tao mau"
 
 
 def test_daily_feature_changes_by_calendar_day_when_multiple_items_exist():

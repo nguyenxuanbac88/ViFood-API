@@ -102,4 +102,5 @@ class SearchServiceV1:
 
         current_date = self._get_current_daily_date(target_date)
         index = current_date.toordinal() % len(items)
-        return items[index]
+        selected = items[index]
+        return self.get_by_id(selected.id) or selected
