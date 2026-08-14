@@ -1,14 +1,10 @@
 from app.models.user_profile import UserProfile
-from app.models.health_goal import HealthGoal
-from app.models.disease import Disease
 from app.models.allergy import Allergy
 from app.repositories.base_repo import BaseRepository
 from app.helpers.convert_time import to_vn_time
 
 from app.schemas.update_profile import UpdateProfileRequest
 
-from app.repositories.health_goal_repo import HealthGoalRepository
-from app.repositories.disease_repo import DiseaseRepository
 from app.repositories.allergy_repo import AllergyRepository
 
 
@@ -16,8 +12,6 @@ class UserProfileRepository(BaseRepository):
     
     def __init__(self, db):
         super().__init__(db)
-        self.health_goal_repo = HealthGoalRepository(db)
-        self.disease_repo = DiseaseRepository(db)
         self.allergy_repo = AllergyRepository(db)
 
     # =========================
@@ -43,8 +37,6 @@ class UserProfileRepository(BaseRepository):
             "first_name": p.get("firstName"),
             "last_name": p.get("lastName"),
             "avatar": p.get("avatar"),
-            "health_goals": p.get("health_goals", []),
-            "diseases": p.get("diseases", []),
             "allergies": p.get("allergies", [])
         }
         
@@ -160,150 +152,6 @@ class UserProfileRepository(BaseRepository):
             record = result.single()
 
             return record["deleted"]
-
-        return self.write(query)
-
-    # =========================
-    # HEALTH GOALS
-    # =========================
-
-    def get_health_goals_by_profile_id(
-        self,
-        profile_id: str
-    ) -> list[HealthGoal]:
-
-        def query(tx):
-            result = tx.run("""
-                MATCH (p:Profile {id: $profile_id})
-                    -[:HAS_HEALTH_GOAL]->(h:HealthGoal)
-                RETURN h
-            """, {
-                "profile_id": profile_id
-            })
-
-            return [
-                self.health_goal_repo._map_health_goal(record)
-                for record in result
-            ]
-
-        return self.read(query)
-
-    def add_health_goal_to_profile(
-        self,
-        profile_id: str,
-        health_goal_id: str
-    ) -> bool:
-        def query(tx):
-            result = tx.run("""
-                MATCH (p:Profile {id: $profile_id})
-                MATCH (h:HealthGoal {id: $health_goal_id})
-
-                MERGE (p)-[:HAS_HEALTH_GOAL]->(h)
-
-                RETURN COUNT(h) > 0 AS success
-            """, {
-                "profile_id": profile_id,
-                "health_goal_id": health_goal_id
-            })
-
-            record = result.single()
-            return record["success"] if record else False
-
-        return self.write(query)
-    
-    def remove_health_goal_from_profile(
-        self,
-        profile_id: str,
-        health_goal_id: str
-    ) -> bool:
-        def query(tx):
-            result = tx.run("""
-                MATCH (p:Profile {id: $profile_id})
-                    -[r:HAS_HEALTH_GOAL]->
-                    (h:HealthGoal {id: $health_goal_id})
-
-                DELETE r
-
-                RETURN COUNT(r) > 0 AS success
-            """, {
-                "profile_id": profile_id,
-                "health_goal_id": health_goal_id
-            })
-
-            record = result.single()
-            return record["success"] if record else False
-
-        return self.write(query)
-
-    # # =========================
-    # # DISEASES
-    # # =========================
-
-    def get_diseases_by_profile_id(
-        self,
-        profile_id: str
-    ) -> list[Disease]:
-
-        def query(tx):
-            result = tx.run("""
-                MATCH (p:Profile {id: $profile_id})
-                    -[:HAS_DISEASE]->(d:Disease)
-                RETURN d
-            """, {
-                "profile_id": profile_id
-            })
-
-            return [
-                self.disease_repo._map_disease(record)
-                for record in result
-            ]
-
-        return self.read(query)
-
-    def add_disease_to_profile(
-        self,
-        profile_id: str,
-        disease_id: str
-    ) -> bool:
-        def query(tx):
-            result = tx.run("""
-                MATCH (p:Profile {id: $profile_id})
-                MATCH (d:Disease {id: $disease_id})
-
-                MERGE (p)-[:HAS_DISEASE]->(d)
-
-                RETURN COUNT(d) > 0 AS success
-            """, {
-                "profile_id": profile_id,
-                "disease_id": disease_id
-            })
-
-            record = result.single()
-            return record["success"] if record else False
-
-        return self.write(query)
-
-    def remove_disease_from_profile(
-        self,
-        profile_id: str,
-        disease_id: str
-    ) -> bool:
-        def query(tx):
-            result = tx.run("""
-                MATCH (p:Profile {id: $profile_id})
-                    -[r:HAS_DISEASE]->
-                    (d:Disease {id: $disease_id})
-
-                DELETE r
-
-                RETURN COUNT(r) > 0 AS success
-            """, {
-                "profile_id": profile_id,
-                "disease_id": disease_id
-            })
-
-            record = result.single()
-            return record["success"] if record else False
 
         return self.write(query)
 

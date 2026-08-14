@@ -5,8 +5,6 @@ from app.repositories.profile_repo import UserProfileRepository
 from app.repositories.user_repo import UserRepository
 from app.schemas.update_profile import UpdateProfileRequest
 
-from app.models.health_goal import HealthGoal
-from app.models.disease import Disease
 from app.models.allergy import Allergy
 
 
@@ -94,112 +92,6 @@ class UserProfileServiceV1:
 
         return True
         
-    # # =========================
-    # # HEALTH GOALS
-    # # =========================
-
-    def get_health_goals_by_profile_id(
-        self,
-        current_user_id: int,
-        target_profile_id: int
-    ) -> list[HealthGoal]:
-
-        self._validate_profile_access(current_user_id, target_profile_id)
-        
-        return self.profile_repo.get_health_goals_by_profile_id(target_profile_id)
-    
-    def add_health_goal_to_profile(
-        self,
-        current_user_id: str,
-        target_profile_id: str,
-        health_goal_id: str
-    ) -> bool:
-
-        self._validate_profile_access(current_user_id, target_profile_id)
-
-        success = self.profile_repo.add_health_goal_to_profile(
-            target_profile_id,
-            health_goal_id
-        )
-        
-        if not success:
-            raise ValueError("Health goal not found")
-        
-        return success
-        
-    def remove_health_goal_from_profile(
-        self,
-        current_user_id: str,
-        target_profile_id: str,
-        health_goal_id: str
-    ) -> bool:
-        
-        self._validate_profile_access(current_user_id, target_profile_id)
-         
-        success = self.profile_repo.remove_health_goal_from_profile(
-             target_profile_id,
-             health_goal_id
-         )
-         
-        if not success:
-            raise ValueError("Health goal not found")
-        
-        return success
-
-    # # =========================
-    # # DISEASES
-    # # =========================
-    
-    def get_diseases_by_profile_id(
-        self,
-        current_user_id: str,
-        target_profile_id: str
-    ) -> list[Disease]:
-
-        self._validate_profile_access(current_user_id, target_profile_id)
-
-        return self.profile_repo.get_diseases_by_profile_id(
-            target_profile_id
-        )
-
-    def add_disease_to_profile(
-        self,
-        current_user_id: str,
-        target_profile_id: str,
-        disease_id: str
-    ) -> bool:
-
-        self._validate_profile_access(current_user_id, target_profile_id)
-
-        success = self.profile_repo.add_disease_to_profile(
-            target_profile_id,
-            disease_id
-        )
-
-        if not success:
-            raise ValueError("Disease not found")
-
-        return success
-
-    def remove_disease_from_profile(
-        self,
-        current_user_id: str,
-        target_profile_id: str,
-        disease_id: str
-    ) -> bool:
-
-        self._validate_profile_access(current_user_id, target_profile_id)
-
-        success = self.profile_repo.remove_disease_from_profile(
-            target_profile_id,
-            disease_id
-        )
-
-        if not success:
-            raise ValueError("Disease not found")
-
-        return success
-
     # # =========================
     # # ALLERGIES
     # # =========================

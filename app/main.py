@@ -18,8 +18,6 @@ from app.routers import upload, example
 # from app.routers.products_alias import router as products_alias_router
 # from app.routers.v0.product import router as product_v0_router
 # from app.routers.v1.products import router as products_v1_router
-# from app.routers.v0.disease import router as disease_v0_router
-# from app.routers.v0.health_goal import router as health_goal_v0_router
 # from app.routers.v0.allergy import router as allergy_v0_router
 # from app.routers.v0.nutrient import router as nutrient_v0_router
 # from app.routers.v0.ingredient import router as ingredient_v0_router
@@ -33,8 +31,6 @@ from app.routers import upload, example
 # V1
 from app.routers.v1.auth import router as auth_v1_router
 from app.routers.v1.user_profile_v1 import router as profile_v1_router
-from app.routers.v1.health_goal_v1 import router as health_goal_v1_router
-from app.routers.v1.disease_v1 import router as disease_v1_router
 from app.routers.v1.allergy_v1 import router as allergy_v1_router
 from app.routers.v1.food_category_v1 import router as food_category_v1_router
 from app.routers.v1.health_effect_v1 import router as health_effect_v1_router
@@ -97,12 +93,6 @@ app.include_router(example.router, prefix=settings.api_prefix)
 # app.include_router(auth.router, prefix=settings.api_prefix)
 # app.include_router(products.router, prefix=settings.api_prefix)
 
-# Disease router (v0)
-# app.include_router(disease_v0_router, prefix=f"{settings.api_prefix}/v0")
-
-# Health Goal router (v0)
-# app.include_router(health_goal_v0_router, prefix=f"{settings.api_prefix}/v0")
-
 # Allergy router (v0)
 # app.include_router(allergy_v0_router, prefix=f"{settings.api_prefix}/v0")
 
@@ -135,10 +125,6 @@ app.include_router(example.router, prefix=settings.api_prefix)
 app.include_router(auth_v1_router, prefix=f"{settings.api_prefix}/v1")
 
 app.include_router(profile_v1_router, prefix=f"{settings.api_prefix}/v1")
-
-app.include_router(health_goal_v1_router, prefix=f"{settings.api_prefix}/v1")
-
-app.include_router(disease_v1_router, prefix=f"{settings.api_prefix}/v1")
 
 app.include_router(allergy_v1_router, prefix=f"{settings.api_prefix}/v1")
 

@@ -1,9 +1,7 @@
 from typing import List
 from app.models.allergy import Allergy
-from app.models.disease import Disease
 from app.models.food_category import FoodCategory
 from app.models.health_effect import HealthEffect
-from app.models.health_goal import HealthGoal
 from app.models.product import Product
 from app.models.ingredient import Ingredient
 from app.models.additive import Additive
@@ -24,8 +22,6 @@ class FakeDB:
         self.users: List[User] = []
         self.user_profiles: List[UserProfile] = []
         self.allergies: List[Allergy] = []
-        self.diseases: List[Disease] = []
-        self.health_goals: List[HealthGoal] = []
         self.food_categories: List[FoodCategory] = []
         self.health_effects: List[HealthEffect] = []
 
