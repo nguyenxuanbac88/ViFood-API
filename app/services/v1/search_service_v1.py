@@ -1,5 +1,6 @@
-from datetime import date
+from datetime import date, datetime
 import random
+from zoneinfo import ZoneInfo
 
 from app.services.v1.additive_service_v1 import AdditiveServiceV1
 from app.services.v1.ingredient_service_v1 import IngredientServiceV1
@@ -7,6 +8,8 @@ from app.services.v1.nutrient_service_v1 import NutrientServiceV1
 
 
 class SearchServiceV1:
+    DAILY_TIMEZONE = ZoneInfo("Asia/Ho_Chi_Minh")
+
     def __init__(self, db):
         self.nutrient_service = NutrientServiceV1(db)
         self.ingredient_service = IngredientServiceV1(db)
@@ -33,9 +36,8 @@ class SearchServiceV1:
 
         return results
 
-    def get_all(self, limit: int = 50) -> list:
-        results = self._get_all_nodes()
-        random.shuffle(results)
+    def get_all(self, limit: int = 50, target_date: date | None = None) -> list:
+        results = self._get_stable_daily_items(target_date)
         return results[:limit]
 
     def get_by_id(self, id: str):
@@ -67,14 +69,37 @@ class SearchServiceV1:
 
         return None
 
-    def get_daily_feature(self):
-        items = sorted(self._get_all_nodes(), key=lambda item: item.id)
+    def _get_daily_sort_key(self, item) -> tuple[str, str, str, str]:
+        return (
+            str(getattr(item, "id", "") or ""),
+            str(getattr(item, "name", "") or ""),
+            str(getattr(item, "name_vi", "") or ""),
+            str(getattr(item, "key", "") or ""),
+        )
+
+    def _get_current_daily_date(self, target_date: date | None = None) -> date:
+        return target_date or datetime.now(self.DAILY_TIMEZONE).date()
+
+    def _get_stable_daily_items(self, target_date: date | None = None) -> list:
+        items = sorted(
+            self._get_all_nodes(),
+            key=self._get_daily_sort_key,
+        )
+
+        current_date = self._get_current_daily_date(target_date)
+        rng = random.Random(f"vifood-search:{current_date.isoformat()}")
+        rng.shuffle(items)
+        return items
+
+    def get_daily_feature(self, target_date: date | None = None):
+        items = sorted(
+            self._get_all_nodes(),
+            key=self._get_daily_sort_key,
+        )
 
         if not items:
             return None
 
-        rng = random.Random(2025)
-        rng.shuffle(items)
-
-        index = date.today().toordinal() % len(items)
+        current_date = self._get_current_daily_date(target_date)
+        index = current_date.toordinal() % len(items)
         return items[index]
