@@ -4,7 +4,9 @@ from app.schemas.additive_v1_schema import (
 )
 
 
-def build_additive_sections(additive: AdditiveDetailResponse) -> list[AdditiveSectionResponse]:
+def build_additive_sections(
+    additive: AdditiveDetailResponse,
+) -> list[AdditiveSectionResponse]:
     return [
         AdditiveSectionResponse(
             section_type="overview",
@@ -13,17 +15,17 @@ def build_additive_sections(additive: AdditiveDetailResponse) -> list[AdditiveSe
         ),
         AdditiveSectionResponse(
             section_type="food_role",
-            title="Vai trò trong thực phẩm",
+            title="Vì sao có trong thực phẩm?",
             content=_build_food_role(additive),
         ),
         AdditiveSectionResponse(
             section_type="permitted_foods",
-            title=f"{_display_name(additive)} được dùng trong những thực phẩm nào?",
+            title="Thường gặp ở đâu?",
             content=_build_permitted_foods(additive),
         ),
         AdditiveSectionResponse(
             section_type="sources_and_regulations",
-            title="Nguồn thông tin và quy định tham khảo",
+            title="Khi đọc nhãn cần lưu ý",
             content=_build_sources_and_regulations(additive),
         ),
     ]
@@ -60,7 +62,10 @@ def _function_names(additive: AdditiveDetailResponse) -> list[str]:
     ))
 
 
-def _category_names(additive: AdditiveDetailResponse, limit: int = 8) -> list[str]:
+def _category_names(
+    additive: AdditiveDetailResponse,
+    limit: int = 8,
+) -> list[str]:
     names = [
         category.name_vi or category.name
         for category in additive.permitted_categories
@@ -71,22 +76,20 @@ def _category_names(additive: AdditiveDetailResponse, limit: int = 8) -> list[st
 
 def _build_overview(additive: AdditiveDetailResponse) -> str:
     name = _display_name(additive)
+    sentences = [
+        f"{name} là một phụ gia thực phẩm, tức là chất được thêm vào sản phẩm với một mục đích công nghệ nhất định."
+    ]
+
     if additive.ins:
-        sentences = [f"{name} là một phụ gia thực phẩm có mã INS {additive.ins}."]
-    else:
-        sentences = [f"{name} là một phụ gia thực phẩm được ghi nhận trong dữ liệu phụ gia của ViFood."]
+        sentences.append(f"Trên nhãn, chất này có thể được nhận diện bằng mã INS {additive.ins}.")
 
     english_name = _english_name(additive)
     if english_name:
-        sentences.append(f"Tên tiếng Anh thường gặp của chất này là {english_name}.")
+        sentences.append(f"Tên tiếng Anh thường gặp là {english_name}.")
 
     aliases = _alias_names(additive)
     if aliases:
-        sentences.append(f"Trên nhãn thực phẩm, chất này cũng có thể được ghi dưới các tên như {', '.join(aliases)}.")
-
-    functions = _function_names(additive)
-    if functions:
-        sentences.append(f"Trong thực phẩm, phụ gia này thường được dùng với vai trò {', '.join(functions)}.")
+        sentences.append(f"Một số cách ghi khác có thể gặp là {', '.join(aliases)}.")
 
     return " ".join(sentences)
 
@@ -97,14 +100,13 @@ def _build_food_role(additive: AdditiveDetailResponse) -> str:
 
     if functions:
         return (
-            f"{name} có thể đóng vai trò là {', '.join(functions)}. "
-            "Nhờ các vai trò này, phụ gia có thể hỗ trợ đặc tính cảm quan, cấu trúc hoặc độ ổn định của sản phẩm, "
-            "tùy theo loại thực phẩm và mục đích sử dụng."
+            f"{name} thường được dùng với vai trò {', '.join(functions)}. "
+            "Tùy sản phẩm, vai trò này có thể liên quan đến mùi vị, màu sắc, cấu trúc, độ ổn định hoặc thời hạn sử dụng."
         )
 
     return (
-        f"Dữ liệu hiện tại chưa ghi nhận chức năng cụ thể của {name}. "
-        "Khi đọc nhãn thực phẩm, người dùng nên đối chiếu tên phụ gia hoặc mã INS với nguồn quy định liên quan."
+        f"Khi thấy {name} trên nhãn, nên hiểu đây là một phụ gia được dùng vì mục đích công nghệ của sản phẩm. "
+        "Để biết chính xác vai trò, cần đọc thêm nhóm chức năng hoặc mã phụ gia đi kèm nếu nhà sản xuất có công bố."
     )
 
 
@@ -114,61 +116,43 @@ def _build_permitted_foods(additive: AdditiveDetailResponse) -> str:
 
     if categories:
         return (
-            f"{name} có thể được sử dụng trong một số nhóm thực phẩm nhất định theo quy định về phụ gia thực phẩm. "
-            f"Các nhóm thực phẩm được ghi nhận gồm "
-            f"{', '.join(categories)}. "
-            "Việc sử dụng trong từng sản phẩm cụ thể còn phụ thuộc vào nhóm thực phẩm, mục đích sử dụng và giới hạn được quy định."
+            f"{name} có thể xuất hiện trong các nhóm thực phẩm như {', '.join(categories)}. "
+            "Điều này không có nghĩa chất này được dùng trong mọi sản phẩm thuộc các nhóm đó; việc sử dụng còn phụ thuộc công thức và giới hạn áp dụng."
         )
 
     return (
-        f"Dữ liệu hiện tại chưa ghi nhận nhóm thực phẩm cụ thể được phép sử dụng {name}. "
-        "Cần đối chiếu thêm văn bản quy định hoặc tiêu chuẩn phụ gia thực phẩm liên quan."
+        f"{name} có thể được phép dùng trong một số nhóm thực phẩm nhất định. "
+        "Khi cần đánh giá kỹ hơn, nên xem tên nhóm thực phẩm, hàm lượng nếu có và quy định phụ gia tương ứng."
     )
 
 
 def _build_sources_and_regulations(additive: AdditiveDetailResponse) -> str:
     name = _display_name(additive)
-    sentences: list[str] = []
-
-    regulation_names = [
-        regulation.name
-        for regulation in additive.regulations
-        if regulation.name
+    sentences = [
+        f"Khi đọc nhãn có {name}, điều quan trọng là xem chất này xuất hiện cùng nhóm thực phẩm nào và được ghi bằng tên hay mã INS."
     ]
 
-    source_names = [
-        source.name
-        for source in additive.sources
-        if source.name
-    ]
-    if source_names or regulation_names:
-        references = list(dict.fromkeys(source_names + regulation_names))
-        sentences.append(
-            f"Thông tin về {name} được tham khảo từ "
-            f"{', '.join(references)}."
-        )
+    references = list(dict.fromkeys(
+        item
+        for item in [
+            *[
+                source.name
+                for source in additive.sources
+                if source.name
+            ],
+            *[
+                regulation.name
+                for regulation in additive.regulations
+                if regulation.name
+            ],
+        ]
+        if item
+    ))
+    if references:
+        sentences.append(f"Các thông tin liên quan có thể đối chiếu với {', '.join(references)}.")
 
-    if regulation_names:
-        sentences.append(
-            "Người dùng có thể tham khảo thêm các văn bản này để biết phụ gia được phép dùng "
-            "trong nhóm thực phẩm nào và các điều kiện sử dụng liên quan."
-        )
-
-    source_details: list[str] = []
-
-    if additive.raw_page_number:
-        source_details.append(f"trang {additive.raw_page_number}")
-
-    if additive.raw_record_number:
-        source_details.append(f"bản ghi số {additive.raw_record_number}")
-
-    if additive.reviewed_at:
-        source_details.insert(0, f"Thông tin đã được rà soát vào ngày {additive.reviewed_at}")
-
-    if source_details:
-        sentences.append(", ".join(source_details) + " của nguồn dữ liệu.")
-
-    if not sentences:
-        return "Dữ liệu hiện tại chưa có nguồn thông tin hoặc quy định tham khảo chi tiết cho phụ gia này."
+    sentences.append(
+        "Phần này chỉ giúp hiểu ý nghĩa của phụ gia trên nhãn, không tự kết luận sản phẩm là tốt hay xấu nếu thiếu bối cảnh khẩu phần và tần suất sử dụng."
+    )
 
     return " ".join(sentences)

@@ -1,7 +1,10 @@
 from fastapi import APIRouter, HTTPException, status
 
 from app.core.database import neo4j_db
-from app.schemas.wiki_node_schema import WikiNodeApiResponse, WikiNodeListApiResponse
+from app.schemas.ingredient_v1_schema import (
+    IngredientDetailApiResponse,
+    IngredientListApiResponse,
+)
 from app.services.v1.ingredient_service_v1 import IngredientServiceV1
 
 router = APIRouter(
@@ -12,7 +15,7 @@ router = APIRouter(
 ingredient_service = IngredientServiceV1(neo4j_db)
 
 
-@router.get("/", response_model=WikiNodeListApiResponse)
+@router.get("/", response_model=IngredientListApiResponse)
 def list_ingredients():
     try:
         ingredients = ingredient_service.get_all_ingredients()
@@ -29,7 +32,7 @@ def list_ingredients():
         )
 
 
-@router.get("/{id}", response_model=WikiNodeApiResponse)
+@router.get("/{id}", response_model=IngredientDetailApiResponse)
 def get_ingredient_by_id(id: str):
     try:
         ingredient = ingredient_service.get_ingredient_by_id(id)

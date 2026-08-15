@@ -47,9 +47,14 @@ class FakeCollection:
         return None
 
 
+class FakeS3Service:
+    def create_download_url(self, s3_key: str) -> str:
+        return f"https://cdn.example.test/{s3_key}"
+
+
 class FakeScanHistoryService(ScanHistoryService):
     def __init__(self):
-        super().__init__(FakeSettings())
+        super().__init__(FakeSettings(), s3_service=FakeS3Service())
         self.collection = FakeCollection()
 
     def _get_collection(self):
@@ -114,6 +119,7 @@ def test_list_for_user_returns_scoped_summary_items():
             "analysis_id": "analysis-1",
             "product_name": "Sữa ABC",
             "image_ref": "image-1.jpg",
+            "image_url": "https://cdn.example.test/image-1.jpg",
             "status": "completed",
             "warning": "Có chứa sữa",
             "created_at": "2026-08-13T01:00:00+00:00",
@@ -171,6 +177,7 @@ def test_get_for_user_returns_only_owned_detail():
         "user_id": "user-1",
         "analysis_id": "analysis-1",
         "image_ref": "image-1.jpg",
+        "image_url": "https://cdn.example.test/image-1.jpg",
         "status": "completed",
         "result": {"product_name": "Sữa ABC"},
         "created_at": "2026-08-13T01:00:00+00:00",
