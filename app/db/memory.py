@@ -1,5 +1,4 @@
 from typing import List
-from app.models.allergy import Allergy
 from app.models.food_category import FoodCategory
 from app.models.health_effect import HealthEffect
 from app.models.product import Product
@@ -21,7 +20,6 @@ class FakeDB:
         self.nutrients: List[Nutrient] = []
         self.users: List[User] = []
         self.user_profiles: List[UserProfile] = []
-        self.allergies: List[Allergy] = []
         self.food_categories: List[FoodCategory] = []
         self.health_effects: List[HealthEffect] = []
 

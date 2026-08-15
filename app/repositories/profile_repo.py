@@ -1,18 +1,14 @@
 from app.models.user_profile import UserProfile
-from app.models.allergy import Allergy
 from app.repositories.base_repo import BaseRepository
 from app.helpers.convert_time import to_vn_time
 
 from app.schemas.update_profile import UpdateProfileRequest
-
-from app.repositories.allergy_repo import AllergyRepository
 
 
 class UserProfileRepository(BaseRepository):
     
     def __init__(self, db):
         super().__init__(db)
-        self.allergy_repo = AllergyRepository(db)
 
     # =========================
     # BASIC
@@ -37,7 +33,6 @@ class UserProfileRepository(BaseRepository):
             "first_name": p.get("firstName"),
             "last_name": p.get("lastName"),
             "avatar": p.get("avatar"),
-            "allergies": p.get("allergies", [])
         }
         
     def create_profile(self, user_id: str, profile: UserProfile):
@@ -152,78 +147,6 @@ class UserProfileRepository(BaseRepository):
             record = result.single()
 
             return record["deleted"]
-
-        return self.write(query)
-
-    # # =========================
-    # # ALLERGIES
-    # # =========================
-
-    def get_allergies_by_profile_id(
-        self,
-        profile_id: str
-    ) -> list[Allergy]:
-
-        def query(tx):
-            result = tx.run("""
-                MATCH (p:Profile {id: $profile_id})
-                    -[:HAS_ALLERGY]->(a:Allergy)
-                RETURN a
-            """, {
-                "profile_id": profile_id
-            })
-
-            return [
-                self.allergy_repo._map_allergy(record)
-                for record in result
-            ]
-
-        return self.read(query)
-
-    def add_allergy_to_profile(
-        self,
-        profile_id: str,
-        allergy_id: str
-    ) -> bool:
-        def query(tx):
-            result = tx.run("""
-                MATCH (p:Profile {id: $profile_id})
-                MATCH (a:Allergy {id: $allergy_id})
-
-                MERGE (p)-[:HAS_ALLERGY]->(a)
-
-                RETURN COUNT(a) > 0 AS success
-            """, {
-                "profile_id": profile_id,
-                "allergy_id": allergy_id
-            })
-
-            record = result.single()
-            return record["success"] if record else False
-
-        return self.write(query)
-
-    def remove_allergy_from_profile(
-        self,
-        profile_id: str,
-        allergy_id: str
-    ) -> bool:
-        def query(tx):
-            result = tx.run("""
-                MATCH (p:Profile {id: $profile_id})
-                    -[r:HAS_ALLERGY]->
-                    (a:Allergy {id: $allergy_id})
-
-                DELETE r
-
-                RETURN COUNT(r) > 0 AS success
-            """, {
-                "profile_id": profile_id,
-                "allergy_id": allergy_id
-            })
-
-            record = result.single()
-            return record["success"] if record else False
 
         return self.write(query)
 

@@ -22,8 +22,6 @@ class Product(BaseModel):
 
     net_weight: Optional[str] = None
 
-    allergen: Optional[str] = None
-
     warning: Optional[str] = None
 
     origin: Optional[str] = None
@@ -51,7 +49,6 @@ class Product(BaseModel):
                 "mfg_date": "2025-12-31",
                 "expiry_date": "2027-12-31",
                 "net_weight": "900g",
-                "allergen": "Sản phẩm có chứa sữa",
                 "warning": "Không sử dụng cho trẻ em dưới 3 tuổi",
                 "origin": "Việt Nam"
             }
@@ -77,8 +74,6 @@ class ProductCreate(BaseModel):
     expiry_date: Optional[str] = None
 
     net_weight: Optional[str] = None
-
-    allergen: Optional[str] = None
 
     warning: Optional[str] = None
 

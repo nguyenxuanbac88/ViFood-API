@@ -51,7 +51,6 @@ class ProductServiceV1:
             mfg_date="2025-12-31",
             expiry_date="2027-12-31",
             net_weight="900g",
-            allergen="Sản phẩm có chứa sữa",
             warning="Không sử dụng cho trẻ em dưới 3 tuổi",
             origin="Việt Nam"
         )

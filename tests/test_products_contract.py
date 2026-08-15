@@ -17,7 +17,6 @@
 #     "mfg_date",
 #     "expiry_date",
 #     "net_weight",
-#     "allergen",
 #     "warning",
 #     "origin",
 #     "createdAt",

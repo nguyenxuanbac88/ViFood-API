@@ -5,8 +5,6 @@ from app.repositories.profile_repo import UserProfileRepository
 from app.repositories.user_repo import UserRepository
 from app.schemas.update_profile import UpdateProfileRequest
 
-from app.models.allergy import Allergy
-
 
 class UserProfileServiceV1:
     
@@ -92,60 +90,6 @@ class UserProfileServiceV1:
 
         return True
         
-    # # =========================
-    # # ALLERGIES
-    # # =========================
-    
-    def get_allergies_by_profile_id(
-        self,
-        current_user_id: str,
-        target_profile_id: str
-    ) -> list[Allergy]:
-
-        self._validate_profile_access(current_user_id, target_profile_id)
-
-        return self.profile_repo.get_allergies_by_profile_id(
-            target_profile_id
-        )
-
-    def add_allergy_to_profile(
-        self,
-        current_user_id: str,
-        target_profile_id: str,
-        allergy_id: str
-    ) -> bool:
-
-        self._validate_profile_access(current_user_id, target_profile_id)
-
-        success = self.profile_repo.add_allergy_to_profile(
-            target_profile_id,
-            allergy_id
-        )
-
-        if not success:
-            raise ValueError("Allergy not found")
-
-        return success
-
-    def remove_allergy_from_profile(
-        self,
-        current_user_id: str,
-        target_profile_id: str,
-        allergy_id: str
-    ) -> bool:
-
-        self._validate_profile_access(current_user_id, target_profile_id)
-
-        success = self.profile_repo.remove_allergy_from_profile(
-            target_profile_id,
-            allergy_id
-        )
-
-        if not success:
-            raise ValueError("Allergy not found")
-
-        return success
-
     # # =========================
     # # ACCESS CONTROL
     # # =========================

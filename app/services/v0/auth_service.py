@@ -27,7 +27,6 @@ class AuthServiceV0:
             first_name=data.first_name,
             last_name=data.last_name,
             avatar=None,
-            allergies=[],
             family_members=[],
             parent_profile_id=None
         )
