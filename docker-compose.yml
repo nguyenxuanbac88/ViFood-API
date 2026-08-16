@@ -45,6 +45,9 @@ services:
       # Override NEO4J_URI để trỏ tới service neo4j trong Docker network
       # (thay localhost bằng tên service "neo4j")
       NEO4J_URI: bolt://neo4j:7687
+      KG_BUILDER_API_URL: ${KG_BUILDER_API_URL}
+      KG_BUILDER_ANALYZE_PATH: ${KG_BUILDER_ANALYZE_PATH}
+      KG_BUILDER_TIMEOUT_SECONDS: ${KG_BUILDER_TIMEOUT_SECONDS}
     volumes:
       # Persist uploads ra ngoài container (không mất khi restart)
       - ./uploads:/app/uploads
