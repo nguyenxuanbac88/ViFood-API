@@ -44,6 +44,9 @@ services:
     environment:
       # Override để API kết nối Neo4j qua Docker network (không phải localhost)
       NEO4J_URI: bolt://neo4j:7687
+      KG_BUILDER_API_URL: ${KG_BUILDER_API_URL}
+      KG_BUILDER_ANALYZE_PATH: ${KG_BUILDER_ANALYZE_PATH}
+      KG_BUILDER_TIMEOUT_SECONDS: ${KG_BUILDER_TIMEOUT_SECONDS}
     volumes:
       # Named volume — uploads tồn tại kể cả khi pull image mới
       - uploads_data:/app/uploads
