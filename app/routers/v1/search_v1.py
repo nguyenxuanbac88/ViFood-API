@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Query, status
 
 from app.core.database import neo4j_db
 from app.services.v1.search_service_v1 import SearchServiceV1
@@ -16,8 +16,10 @@ search_service = SearchServiceV1(neo4j_db)
     "/",
     summary="Lấy danh sách nutrient, ingredient, additive"
 )
-def get_nodes():
-    nodes = search_service.get_all()
+def get_nodes(
+    limit: int = Query(default=50, ge=1, le=100)
+):
+    nodes = search_service.get_all(limit=limit)
     return {
         "message": "Get search nodes success",
         "data": nodes,

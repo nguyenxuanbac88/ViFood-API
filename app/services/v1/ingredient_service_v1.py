@@ -1,4 +1,5 @@
 from app.repositories.ingredient_repo import IngredientRepository
+from app.templates.ingredient_section_template import build_ingredient_sections
 
 
 class IngredientServiceV1:
@@ -20,4 +21,5 @@ class IngredientServiceV1:
         if not ingredient:
             raise ValueError("Ingredient Not Found")
 
+        ingredient.sections = build_ingredient_sections(ingredient)
         return ingredient

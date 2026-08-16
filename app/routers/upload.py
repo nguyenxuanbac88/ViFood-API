@@ -70,10 +70,10 @@ async def upload_image(
 
     except HTTPException as he:
         raise he
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=500,
-            detail=f"Lỗi không xác định: {str(e)}"
+            detail="Lỗi không xác định khi upload hình ảnh"
         )
 
 
@@ -103,10 +103,10 @@ async def delete_image(
 
     except HTTPException as he:
         raise he
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=500,
-            detail=f"Lỗi không xác định: {str(e)}"
+            detail="Lỗi không xác định khi xóa hình ảnh"
         )
 
 

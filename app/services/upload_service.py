@@ -70,10 +70,10 @@ class UploadService:
         try:
             async with aiofiles.open(file_path, 'wb') as f:
                 await f.write(contents)
-        except Exception as e:
+        except Exception:
             raise HTTPException(
                 status_code=500,
-                detail=f"Lỗi khi lưu file: {str(e)}"
+                detail="Lỗi khi lưu file"
             )
         
         # Get file info

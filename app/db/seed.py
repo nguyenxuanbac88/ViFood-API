@@ -5,7 +5,6 @@
 # from app.models.additive import Additive
 # from app.models.health_effect import HealthEffect
 # from app.models.food_category import FoodCategory
-# # from app.models.allergy import Allergy
 # # user and user_profile not required in seed data
 
 
@@ -40,7 +39,6 @@
 #             mfg_date="2025-12-31",
 #             expiry_date="2027-12-31",
 #             net_weight="900g",
-#             allergen="Có chứa sữa, có thể chứa đậu nành",
 #             warning="Không dùng cho trẻ dưới 1 tuổi khi không có chỉ định bác sĩ",
 #             origin="Việt Nam",
 #             createdAt="2026-06-08T05:27:07.241790Z",
@@ -73,8 +71,7 @@
 #             mfg_date="2025-10-15",
 #             expiry_date="2027-10-15",
 #             net_weight="500g",
-#             allergen="Có chứa sữa",
-#             warning="Không dùng cho trẻ dị ứng đạm sữa bò",
+#             warning="Không dùng cho trẻ dưới 6 tháng tuổi khi không có chỉ định bác sĩ",
 #             origin="Việt Nam",
 #             createdAt="2026-06-09T01:15:22.241790Z",
 #             timeZone="Asia/Ho_Chi_Minh",
@@ -104,7 +101,6 @@
 #             mfg_date="2026-01-10",
 #             expiry_date="2027-01-10",
 #             net_weight="500ml",
-#             allergen=None,
 #             warning="Không dùng quá 1 lít/ngày",
 #             origin="Việt Nam",
 #             createdAt="2026-06-09T11:42:55.241790Z",
@@ -216,29 +212,7 @@
 #     # ALLERGIES
 #     # =========================
     
-#     # db.allergies.extend([
-#     #     Allergy(id=1, name="Sữa"),
-#     #     Allergy(id=2, name="Gluten"),
-#     #     Allergy(id=3, name="Đậu phộng")])
     
-#     # =========================
-#     # DISEASES
-#     # =========================
-    
-#     # db.diseases.extend([
-#     #     Disease(id=1, name="Bệnh tiểu đường"),
-#     #     Disease(id=2, name="Bệnh tim mạch"),
-#     #     Disease(id=3, name="Bệnh béo phì")])
-    
-#     # =========================
-#     # HEALTH GOALS
-#     # =========================
-#     # db.health_goals.extend([
-#     #     HealthGoal(id=1, name="Giảm cân"),
-#     #     HealthGoal(id=2, name="Tăng cơ"),
-#     #     HealthGoal(id=3, name="Duy trì sức khỏe"),
-#     # ])
-
 #     # =========================
 #     # NUTRIENTS
 #     # =========================
