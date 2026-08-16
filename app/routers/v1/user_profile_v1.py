@@ -58,6 +58,7 @@ async def get_family_members(
             detail=str(e)
         )
 
+
 @router.get(
     "/family-members/{profile_id}",
     summary="Lấy chi tiết thành viên gia đình"
