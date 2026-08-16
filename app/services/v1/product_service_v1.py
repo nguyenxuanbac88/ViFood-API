@@ -99,6 +99,7 @@ class ProductServiceV1:
             {
                 "analysis_id": analysis_id,
                 "image_ref": image_ref,
+                "image_url": self.s3_service.create_download_url(image_ref),
             }
         )
 

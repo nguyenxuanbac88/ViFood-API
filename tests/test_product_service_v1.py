@@ -22,6 +22,10 @@ class FakeS3Service:
         assert content_type == "image/png"
         return "scans/user-1/image.png"
 
+    def create_download_url(self, s3_key: str) -> str:
+        assert s3_key == "scans/user-1/image.png"
+        return "https://storage.example/scans/user-1/image.png"
+
 
 class FakeScanHistoryService:
     last_saved = None
@@ -149,6 +153,7 @@ def test_extract_from_image_calls_builder_with_image_payload_before_s3(monkeypat
                 }
             ],
             "image_ref": "scans/user-1/image.png",
+            "image_url": "https://storage.example/scans/user-1/image.png",
         },
     }
     assert FakeScanHistoryService.last_saved["user_id"] == "user-1"
