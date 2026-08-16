@@ -58,7 +58,6 @@ async def get_family_members(
             detail=str(e)
         )
 
-
 @router.get(
     "/family-members/{profile_id}",
     summary="Lấy chi tiết thành viên gia đình"
@@ -200,4 +199,3 @@ async def delete_user_profile(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=str(e)
         )
-

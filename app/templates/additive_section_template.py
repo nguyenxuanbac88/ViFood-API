@@ -77,7 +77,8 @@ def _category_names(
 def _build_overview(additive: AdditiveDetailResponse) -> str:
     name = _display_name(additive)
     sentences = [
-        f"{name} là một phụ gia thực phẩm, tức là chất được thêm vào sản phẩm với một mục đích công nghệ nhất định."
+        f"{name} là một phụ gia thực phẩm, tức là chất được thêm vào sản phẩm "
+        "với một mục đích công nghệ nhất định."
     ]
 
     if additive.ins:
@@ -101,12 +102,15 @@ def _build_food_role(additive: AdditiveDetailResponse) -> str:
     if functions:
         return (
             f"{name} thường được dùng với vai trò {', '.join(functions)}. "
-            "Tùy sản phẩm, vai trò này có thể liên quan đến mùi vị, màu sắc, cấu trúc, độ ổn định hoặc thời hạn sử dụng."
+            "Tùy sản phẩm, vai trò này có thể liên quan đến mùi vị, màu sắc, cấu trúc, "
+            "độ ổn định hoặc thời hạn sử dụng."
         )
 
     return (
-        f"Khi thấy {name} trên nhãn, nên hiểu đây là một phụ gia được dùng vì mục đích công nghệ của sản phẩm. "
-        "Để biết chính xác vai trò, cần đọc thêm nhóm chức năng hoặc mã phụ gia đi kèm nếu nhà sản xuất có công bố."
+        f"Khi thấy {name} trên nhãn, nên hiểu đây là một phụ gia được dùng "
+        "vì mục đích công nghệ của sản phẩm. "
+        "Để biết chính xác vai trò, cần đọc thêm nhóm chức năng hoặc mã phụ gia đi kèm "
+        "nếu nhà sản xuất có công bố."
     )
 
 
@@ -117,19 +121,22 @@ def _build_permitted_foods(additive: AdditiveDetailResponse) -> str:
     if categories:
         return (
             f"{name} có thể xuất hiện trong các nhóm thực phẩm như {', '.join(categories)}. "
-            "Điều này không có nghĩa chất này được dùng trong mọi sản phẩm thuộc các nhóm đó; việc sử dụng còn phụ thuộc công thức và giới hạn áp dụng."
+            "Điều này không có nghĩa chất này được dùng trong mọi sản phẩm thuộc các nhóm đó; "
+            "việc sử dụng còn phụ thuộc công thức và giới hạn áp dụng."
         )
 
     return (
         f"{name} có thể được phép dùng trong một số nhóm thực phẩm nhất định. "
-        "Khi cần đánh giá kỹ hơn, nên xem tên nhóm thực phẩm, hàm lượng nếu có và quy định phụ gia tương ứng."
+        "Khi cần đánh giá kỹ hơn, nên xem tên nhóm thực phẩm, hàm lượng nếu có "
+        "và quy định phụ gia tương ứng."
     )
 
 
 def _build_sources_and_regulations(additive: AdditiveDetailResponse) -> str:
     name = _display_name(additive)
     sentences = [
-        f"Khi đọc nhãn có {name}, điều quan trọng là xem chất này xuất hiện cùng nhóm thực phẩm nào và được ghi bằng tên hay mã INS."
+        f"Khi đọc nhãn có {name}, điều quan trọng là xem chất này xuất hiện cùng nhóm thực phẩm nào "
+        "và được ghi bằng tên hay mã INS."
     ]
 
     references = list(dict.fromkeys(
@@ -152,7 +159,8 @@ def _build_sources_and_regulations(additive: AdditiveDetailResponse) -> str:
         sentences.append(f"Các thông tin liên quan có thể đối chiếu với {', '.join(references)}.")
 
     sentences.append(
-        "Phần này chỉ giúp hiểu ý nghĩa của phụ gia trên nhãn, không tự kết luận sản phẩm là tốt hay xấu nếu thiếu bối cảnh khẩu phần và tần suất sử dụng."
+        "Phần này chỉ giúp hiểu ý nghĩa của phụ gia trên nhãn, không tự kết luận sản phẩm "
+        "là tốt hay xấu nếu thiếu bối cảnh khẩu phần và tần suất sử dụng."
     )
 
     return " ".join(sentences)

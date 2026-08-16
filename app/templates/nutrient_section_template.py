@@ -44,7 +44,8 @@ def _english_name(nutrient: NutrientDetailResponse) -> str | None:
 def _build_overview(nutrient: NutrientDetailResponse) -> str:
     name = _display_name(nutrient)
     sentences = [
-        f"{name} là một thành phần dinh dưỡng có thể xuất hiện trong bảng thông tin dinh dưỡng của thực phẩm đóng gói."
+        f"{name} là một thành phần dinh dưỡng có thể xuất hiện trong bảng thông tin dinh dưỡng "
+        "của thực phẩm đóng gói."
     ]
 
     english_name = _english_name(nutrient)
@@ -63,12 +64,14 @@ def _build_common_unit(nutrient: NutrientDetailResponse) -> str:
     if nutrient.default_unit:
         return (
             f"Khi đọc nhãn, {name} thường được biểu diễn bằng đơn vị {nutrient.default_unit}. "
-            "Con số này nên được xem cùng khẩu phần ăn hoặc khối lượng sản phẩm, vì cùng một hàm lượng có thể mang ý nghĩa khác nhau giữa các khẩu phần."
+            "Con số này nên được xem cùng khẩu phần ăn hoặc khối lượng sản phẩm, "
+            "vì cùng một hàm lượng có thể mang ý nghĩa khác nhau giữa các khẩu phần."
         )
 
     return (
         f"Với {name}, đơn vị có thể thay đổi tùy cách trình bày của từng nhãn thực phẩm. "
-        "Người đọc nên xem kỹ phần khẩu phần, khối lượng và đơn vị đi kèm trước khi so sánh giữa các sản phẩm."
+        "Người đọc nên xem kỹ phần khẩu phần, khối lượng và đơn vị đi kèm "
+        "trước khi so sánh giữa các sản phẩm."
     )
 
 
@@ -84,12 +87,15 @@ def _build_health_note(nutrient: NutrientDetailResponse) -> str:
         return (
             f"Về mặt dinh dưỡng, {name} thường được nhắc đến với các vai trò như "
             f"{'; '.join(claim_texts)}. "
-            "Các thông tin này giúp hiểu ý nghĩa của chất dinh dưỡng trong khẩu phần, nhưng không thay thế tư vấn y tế cá nhân."
+            "Các thông tin này giúp hiểu ý nghĩa của chất dinh dưỡng trong khẩu phần, "
+            "nhưng không thay thế tư vấn y tế cá nhân."
         )
 
     return (
-        f"{name} nên được hiểu trong bối cảnh tổng thể của khẩu phần ăn, không chỉ bằng một con số riêng lẻ trên nhãn. "
-        "Khi so sánh sản phẩm, hãy xem chất này cùng năng lượng, đường, chất béo, natri và các thành phần liên quan khác."
+        f"{name} nên được hiểu trong bối cảnh tổng thể của khẩu phần ăn, "
+        "không chỉ bằng một con số riêng lẻ trên nhãn. "
+        "Khi so sánh sản phẩm, hãy xem chất này cùng năng lượng, đường, chất béo, "
+        "natri và các thành phần liên quan khác."
     )
 
 
@@ -99,7 +105,8 @@ def _build_sources_and_labeling(nutrient: NutrientDetailResponse) -> str:
 
     if nutrient.vietnam_label_requirement:
         sentences.append(
-            f"Trong ghi nhãn dinh dưỡng, {name} thuộc nhóm {_label_requirement_text(nutrient.vietnam_label_requirement)} khi công bố trên sản phẩm."
+            f"Trong ghi nhãn dinh dưỡng, {name} thuộc nhóm "
+            f"{_label_requirement_text(nutrient.vietnam_label_requirement)} khi công bố trên sản phẩm."
         )
 
     source_names = list(dict.fromkeys(
@@ -112,7 +119,8 @@ def _build_sources_and_labeling(nutrient: NutrientDetailResponse) -> str:
 
     if not sentences:
         return (
-            f"Khi cần hiểu sâu hơn về {name}, nên đối chiếu thêm với bảng thành phần, khẩu phần ăn và các tài liệu dinh dưỡng đáng tin cậy."
+            f"Khi cần hiểu sâu hơn về {name}, nên đối chiếu thêm với bảng thành phần, "
+            "khẩu phần ăn và các tài liệu dinh dưỡng đáng tin cậy."
         )
 
     return " ".join(sentences)
