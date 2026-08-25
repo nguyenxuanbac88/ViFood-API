@@ -2,7 +2,7 @@
 
 **Feature Branch**: `001-auth-user-management`
 
-**Created**: 2026-08-13
+**Created**: 2026-06-08
 
 **Status**: Đã duyệt cho quy trình AI4SE
 

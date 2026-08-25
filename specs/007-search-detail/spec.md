@@ -2,7 +2,7 @@
 
 **Feature Branch**: `007-search-detail`
 
-**Created**: 2026-08-13
+**Created**: 2026-07-18
 
 **Status**: Đã duyệt cho quy trình AI4SE
 

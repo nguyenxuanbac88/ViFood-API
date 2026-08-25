@@ -1,6 +1,6 @@
 # Implementation Plan: Xác Thực Và Quản Lý Người Dùng
 
-**Branch**: `001-auth-user-management` | **Date**: 2026-08-13 | **Spec**: `spec.md`
+**Branch**: `001-auth-user-management` | **Date**: 2026-06-08 | **Spec**: `spec.md`
 
 **Input**: Đặc tả chức năng từ `/specs/001-auth-user-management/spec.md`
 

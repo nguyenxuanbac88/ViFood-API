@@ -1,12 +1,12 @@
 # Implementation Plan: Phân Tích Ảnh Nhãn
 
-**Branch**: `004-product-extraction` | **Date**: 2026-08-13 | **Spec**: `spec.md`
+**Branch**: `004-product-extraction` | **Date**: 2026-07-04 | **Spec**: `spec.md`
 
 **Input**: Đặc tả chức năng từ `/specs/004-product-extraction/spec.md`
 
 ## Summary
 
-Chuẩn hóa và kiểm chứng chức năng `Phân Tích Ảnh Nhãn` của ViFood-API theo flow AI4SE: bắt đầu từ Sys-docs và AGENTS, dùng Spec Kit artifacts, chọn Codex skills đúng phạm vi, thực hiện hoặc rà soát code Backend API, chạy pytest/contract checks, sau đó chờ người phát triển xác nhận và ghi evidence.
+Chuẩn hóa và kiểm chứng chức năng `Phân Tích Ảnh Nhãn` của ViFood-API theo flow AI4SE: nhận ảnh, validate, gọi Builder, xử lý lỗi downstream, lưu success path đúng thứ tự và bàn giao result hợp lệ cho response contract public riêng.
 
 ## Technical Context
 
@@ -17,7 +17,7 @@ Chuẩn hóa và kiểm chứng chức năng `Phân Tích Ảnh Nhãn` của ViF
 **Target Platform**: Backend API service  
 **Project Type**: web-service  
 **Performance Goals**: API phản hồi ổn định, không block quá lâu ngoài timeout downstream đã cấu hình.  
-**Constraints**: App chỉ gọi ViFood-API; API không gọi AIaaS trực tiếp trong flow chính; không hard-code secret; không trả internal payload.  
+**Constraints**: App chỉ gọi ViFood-API; API không gọi AIaaS trực tiếp trong flow chính; không hard-code secret; response public chi tiết thuộc `009-analysis-result-response-contract`.  
 **Scale/Scope**: Một chức năng Backend API có thể kiểm chứng độc lập bằng test hoặc checklist thủ công.
 
 ## Constitution Check
@@ -25,7 +25,7 @@ Chuẩn hóa và kiểm chứng chức năng `Phân Tích Ảnh Nhãn` của ViF
 - Backend API là public boundary duy nhất cho app: PASS.
 - Luồng extraction giữ đúng App -> API -> Builder -> AIaaS -> Builder -> API -> S3/MongoDB khi chức năng liên quan: REQUIRED.
 - Data ownership giữa S3, MongoDB, Neo4j và Builder được giữ rõ: REQUIRED.
-- Public contract và error response không lộ dữ liệu nội bộ: REQUIRED.
+- Public result response contract được tách sang `009-analysis-result-response-contract`: REQUIRED.
 - Task phải truy vết được từ spec/plan/tasks đến test và human confirmation: REQUIRED.
 
 ## AI4SE Execution Flow
@@ -45,8 +45,9 @@ Sys-docs + root AGENTS.md + ViFood-API/AGENTS.md
 ## Verification Strategy
 
 - Chạy `python -m pytest -q` sau thay đổi code Backend API nếu môi trường cho phép.
-- Chạy test/contract tập trung vào router, service, repository, schema và error mapping liên quan.
+- Chạy test/contract tập trung vào router, service, repository, Builder client và error mapping liên quan.
 - Với extraction/storage/history, kiểm tra Builder success/failure, S3 save, MongoDB history và không gửi `s3_key` cho Builder.
+- Với response public cho app, đối chiếu thêm `009-analysis-result-response-contract`.
 - Với search/detail/catalog, kiểm tra Neo4j mapping không trả raw graph/debug payload.
 - Với auth/profile, kiểm tra user scope, token/session và không lộ secret/password hash.
 - Ghi kết quả test, blocker hoặc checklist thủ công vào evidence log.
@@ -63,7 +64,7 @@ tests/test_product_service_v1.py
 tests/test_products_contract.py
 ```
 
-**Structure Decision**: Dùng kiến trúc FastAPI hiện có: router nhận request, service xử lý nghiệp vụ, repository truy cập dữ liệu, schema định nghĩa contract public, tests kiểm chứng hành vi. Không thêm bypass từ app đến service nội bộ.
+**Structure Decision**: Dùng kiến trúc FastAPI hiện có: router nhận request, service xử lý nghiệp vụ, repository truy cập dữ liệu, schema định nghĩa contract public, tests kiểm chứng hành vi. Feature này sở hữu extraction orchestration; response schema chi tiết cho app do `009-analysis-result-response-contract` sở hữu. Không thêm bypass từ app đến service nội bộ.
 
 ## Complexity Tracking
 

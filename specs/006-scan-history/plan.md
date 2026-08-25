@@ -1,6 +1,6 @@
 # Implementation Plan: Lịch Sử Quét
 
-**Branch**: `006-scan-history` | **Date**: 2026-08-13 | **Spec**: `spec.md`
+**Branch**: `006-scan-history` | **Date**: 2026-07-15 | **Spec**: `spec.md`
 
 **Input**: Đặc tả chức năng từ `/specs/006-scan-history/spec.md`
 

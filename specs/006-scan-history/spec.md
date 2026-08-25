@@ -2,7 +2,7 @@
 
 **Feature Branch**: `006-scan-history`
 
-**Created**: 2026-08-13
+**Created**: 2026-07-15
 
 **Status**: Đã duyệt cho quy trình AI4SE
 

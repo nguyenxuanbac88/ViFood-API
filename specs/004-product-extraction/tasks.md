@@ -18,7 +18,7 @@
 
 - [ ] T004 Rà soát `product_v1.py` và `product_service_v1.py`.
 - [ ] T005 Rà soát Builder request schema và timeout/error mapping.
-- [ ] T006 Rà soát public extraction response schema và không lộ internal payload.
+- [ ] T006 Rà soát điểm bàn giao result hợp lệ sang `009-analysis-result-response-contract` và không lộ internal payload.
 
 ## Phase 3: User Stories Implementation And Review
 
@@ -27,13 +27,13 @@
 - [ ] T007 [US1] Kiểm tra validate multipart file content type/size.
 - [ ] T008 [US1] Kiểm tra gửi image payload đến Builder trước S3 upload và không gửi `s3_key`.
 - [ ] T009 [US2] Kiểm tra Builder failure/timeout không tạo success history/storage.
-- [ ] T010 [US2] Kiểm tra map Builder response sang public API schema.
+- [ ] T010 [US2] Kiểm tra Builder success result được validate trước khi bàn giao cho response contract public.
 
 ## Phase 4: Contract And Security Verification
 
 **Goal**: Kiểm tra public contract, downstream boundary và dữ liệu nhạy cảm trước khi chấp nhận.
 
-- [ ] T011 Đối chiếu response/request schema với `Sys-docs/03-api-contracts` và model client liên quan.
+- [ ] T011 Đối chiếu request/downstream schema với `Sys-docs/03-api-contracts` và đối chiếu response public qua `009-analysis-result-response-contract`.
 - [ ] T012 Kiểm tra không có secret, token, password, raw image/base64, raw MongoDB/Neo4j object hoặc internal payload trong response/log public.
 - [ ] T013 Kiểm tra flow không cho App bypass ViFood-API và không cho ViFood-API gọi AIaaS trực tiếp trong luồng chính.
 

@@ -1,6 +1,6 @@
 # Implementation Plan: Danh Mục Tri Thức Public
 
-**Branch**: `003-knowledge-catalog` | **Date**: 2026-08-13 | **Spec**: `spec.md`
+**Branch**: `003-knowledge-catalog` | **Date**: 2026-06-20 | **Spec**: `spec.md`
 
 **Input**: Đặc tả chức năng từ `/specs/003-knowledge-catalog/spec.md`
 

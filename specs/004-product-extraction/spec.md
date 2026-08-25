@@ -2,11 +2,11 @@
 
 **Feature Branch**: `004-product-extraction`
 
-**Created**: 2026-08-13
+**Created**: 2026-07-04
 
 **Status**: Đã duyệt cho quy trình AI4SE
 
-**Input**: Mô tả của người dùng: "ViFood-API nhận ảnh nhãn từ app, validate, gửi payload ảnh cho Builder trước khi lưu S3/MongoDB, rồi trả kết quả public cho app."
+**Input**: Mô tả của người dùng: "ViFood-API nhận ảnh nhãn từ app, validate, gửi payload ảnh cho Builder trước khi lưu S3/MongoDB, xử lý lỗi downstream an toàn và bàn giao kết quả hợp lệ cho contract response public."
 
 ## AI4SE Context *(mandatory)*
 
@@ -21,7 +21,7 @@
 
 ### User Story 1 - Gửi Ảnh Nhãn Để Phân Tích (Priority: P1)
 
-Người dùng gửi ảnh nhãn thực phẩm từ app để Backend điều phối phân tích và trả kết quả có cấu trúc.
+Người dùng gửi ảnh nhãn thực phẩm từ app để Backend điều phối phân tích qua Builder.
 
 **Why this priority**: Đây là luồng nghiệp vụ trung tâm của toàn bộ hệ thống.
 
@@ -49,23 +49,23 @@ Backend xử lý lỗi Builder mà không ghi nhận scan thành công.
 
 ---
 
-### User Story 3 - Trả Kết Quả Public Cho App (Priority: P2)
+### User Story 3 - Bàn Giao Kết Quả Hợp Lệ Cho Response Contract (Priority: P2)
 
-Backend map kết quả Builder sang response public phù hợp cho app.
+Backend xác nhận kết quả Builder hợp lệ và bàn giao sang feature response contract public để trả cho app.
 
-**Why this priority**: App cần contract ổn định, không phụ thuộc raw payload nội bộ.
+**Why this priority**: Flow extraction cần ranh giới rõ giữa điều phối phân tích và contract public mà app sử dụng.
 
-**Independent Test**: Mock Builder response đủ field và xác nhận response API không chứa debug/internal fields.
+**Independent Test**: Mock Builder response đủ field và xác nhận extraction service chuyển dữ liệu hợp lệ sang success path, còn format response public thuộc `009-analysis-result-response-contract`.
 
 **Acceptance Scenarios**:
 
-1. **Given** Builder trả result hợp lệ, **When** Backend nhận response, **Then** Backend map sang schema public.
+1. **Given** Builder trả result hợp lệ, **When** Backend nhận response, **Then** Backend xác nhận result hợp lệ và chuyển sang success path.
 2. **Given** Builder trả thiếu field bắt buộc, **When** Backend validate, **Then** Backend trả lỗi processing public.
 
 ### Edge Cases
 
 - Request thiếu token hoặc token sai phải trả lỗi public khi endpoint yêu cầu xác thực.
-- Response public không chứa stack trace, secret, raw database object hoặc raw internal payload.
+- Response public chi tiết thuộc `009-analysis-result-response-contract` và không được chứa stack trace, secret, raw database object hoặc raw internal payload.
 - Contract thay đổi phải được đối chiếu với `Sys-docs/03-api-contracts` và client iOS liên quan.
 - Không log token, password, API key hoặc ảnh/base64 đầy đủ.
 
@@ -80,13 +80,13 @@ Backend map kết quả Builder sang response public phù hợp cho app.
 - **FR-005**: API KHÔNG ĐƯỢC gửi `s3_key` hoặc `image_ref` làm input phân tích cho Builder.
 - **FR-006**: API KHÔNG ĐƯỢC gọi trực tiếp AIaaS trong flow chính.
 - **FR-007**: API PHẢI coi Builder invalid response/timeout/failure là phân tích thất bại.
-- **FR-008**: API PHẢI không expose raw Builder debug payload trong response public.
+- **FR-008**: API PHẢI bàn giao result hợp lệ cho `009-analysis-result-response-contract` và không expose raw Builder debug payload.
 
 ### Key Entities
 
 - **UploadedImage**: multipart image nhận từ app trước khi persistence.
 - **BuilderAnalysisRequest**: request nội bộ gửi đến Builder.
-- **AnalysisResult**: kết quả phân tích public trả cho app.
+- **BuilderAnalysisResult**: kết quả Builder hợp lệ sau normalize/link, trước khi bọc response public cho app.
 - **RequestTrace**: metadata truy vết request giữa Backend và Builder.
 
 ## Success Criteria *(mandatory)*
@@ -97,8 +97,9 @@ Backend map kết quả Builder sang response public phù hợp cho app.
 - **SC-002**: Builder failure ngăn success S3/history persistence.
 - **SC-003**: Builder request không chứa `s3_key` hoặc `image_ref`.
 - **SC-004**: Invalid file bị từ chối trước downstream call.
-- **SC-005**: Pytest product extraction pass sau thay đổi.
-- **SC-006**: Evidence AI4SE ghi rõ contract API-Builder và kết quả kiểm chứng.
+- **SC-005**: Builder success result được chuyển sang response contract public riêng.
+- **SC-006**: Pytest product extraction pass sau thay đổi.
+- **SC-007**: Evidence AI4SE ghi rõ contract API-Builder và kết quả kiểm chứng.
 
 ## Assumptions
 

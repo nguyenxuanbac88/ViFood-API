@@ -2,7 +2,7 @@
 
 **Feature Branch**: `002-user-profile-preferences`
 
-**Created**: 2026-08-13
+**Created**: 2026-06-16
 
 **Status**: Đã duyệt cho quy trình AI4SE
 

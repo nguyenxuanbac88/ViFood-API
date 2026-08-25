@@ -1,6 +1,6 @@
 # Implementation Plan: Tìm Kiếm Và Chi Tiết Tri Thức
 
-**Branch**: `007-search-detail` | **Date**: 2026-08-13 | **Spec**: `spec.md`
+**Branch**: `007-search-detail` | **Date**: 2026-07-18 | **Spec**: `spec.md`
 
 **Input**: Đặc tả chức năng từ `/specs/007-search-detail/spec.md`
 

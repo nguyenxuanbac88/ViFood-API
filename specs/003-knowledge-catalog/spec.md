@@ -2,7 +2,7 @@
 
 **Feature Branch**: `003-knowledge-catalog`
 
-**Created**: 2026-08-13
+**Created**: 2026-06-20
 
 **Status**: Đã duyệt cho quy trình AI4SE
 
